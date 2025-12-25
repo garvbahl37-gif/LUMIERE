@@ -6,7 +6,7 @@ import product4 from "@/assets/product-4.jpg";
 
 const products = [
   {
-    id: 1,
+    id: "1",
     image: product1,
     name: "Ceramic Vase Collection",
     price: 89,
@@ -14,7 +14,7 @@ const products = [
     isNew: true,
   },
   {
-    id: 2,
+    id: "2",
     image: product2,
     name: "Artisan Soy Candle",
     price: 48,
@@ -22,7 +22,7 @@ const products = [
     isNew: false,
   },
   {
-    id: 3,
+    id: "3",
     image: product3,
     name: "Linen Throw Blanket",
     price: 145,
@@ -30,7 +30,7 @@ const products = [
     isNew: true,
   },
   {
-    id: 4,
+    id: "4",
     image: product4,
     name: "Botanical Face Serum",
     price: 68,

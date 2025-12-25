@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Heart, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface ProductCardProps {
+  id?: string;
   image: string;
   name: string;
   price: number;
@@ -10,7 +12,7 @@ interface ProductCardProps {
   isNew?: boolean;
 }
 
-const ProductCard = ({ image, name, price, category, isNew }: ProductCardProps) => {
+const ProductCard = ({ id = "1", image, name, price, category, isNew }: ProductCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
 
@@ -21,7 +23,7 @@ const ProductCard = ({ image, name, price, category, isNew }: ProductCardProps) 
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Image container */}
-      <div className="relative aspect-[4/5] overflow-hidden bg-secondary rounded-sm mb-4">
+      <Link to={`/product/${id}`} className="block relative aspect-[4/5] overflow-hidden bg-secondary rounded-sm mb-4">
         <img
           src={image}
           alt={name}
@@ -37,7 +39,10 @@ const ProductCard = ({ image, name, price, category, isNew }: ProductCardProps) 
 
         {/* Wishlist button */}
         <button
-          onClick={() => setIsLiked(!isLiked)}
+          onClick={(e) => {
+            e.preventDefault();
+            setIsLiked(!isLiked);
+          }}
           className={`absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center transition-smooth ${
             isLiked
               ? "bg-accent text-accent-foreground"
@@ -54,12 +59,16 @@ const ProductCard = ({ image, name, price, category, isNew }: ProductCardProps) 
             isHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           }`}
         >
-          <Button variant="default" className="w-full gap-2">
+          <Button 
+            variant="default" 
+            className="w-full gap-2"
+            onClick={(e) => e.preventDefault()}
+          >
             <Plus size={16} />
             Quick Add
           </Button>
         </div>
-      </div>
+      </Link>
 
       {/* Product info */}
       <div className="space-y-1">
@@ -67,9 +76,9 @@ const ProductCard = ({ image, name, price, category, isNew }: ProductCardProps) 
           {category}
         </p>
         <h3 className="font-display text-lg group-hover:text-accent transition-smooth">
-          <a href="#" className="focus:outline-none focus:underline">
+          <Link to={`/product/${id}`} className="focus:outline-none focus:underline">
             {name}
-          </a>
+          </Link>
         </h3>
         <p className="font-body text-base">
           ${price.toFixed(2)}
