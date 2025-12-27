@@ -422,37 +422,38 @@ const Chatbot = () => {
 
     return (
         <>
-            {/* Chat Button - Rose Gold Gradient with Glow */}
+            {/* Chat Button - Solid Premium Rose Gold */}
             <button
                 onClick={() => setIsOpen(true)}
-                className={`fixed bottom-6 right-6 z-50 w-16 h-16 rounded-full bg-gradient-to-br from-[hsl(10,55%,68%)] via-[hsl(15,50%,65%)] to-[hsl(350,45%,60%)] text-white shadow-lg hover:shadow-2xl hover:shadow-[hsl(10,55%,68%,0.4)] transition-all duration-300 flex items-center justify-center group ${isOpen ? 'scale-0' : 'scale-100'}`}
+                className={`fixed bottom-6 right-6 z-50 w-16 h-16 rounded-full bg-[#E6B4A6] text-white shadow-2xl hover:scale-105 hover:bg-[#dca596] transition-all duration-300 flex items-center justify-center group ${isOpen ? 'scale-0' : 'scale-100'}`}
                 aria-label="Open chat"
-                style={{ boxShadow: '0 8px 32px rgba(205, 145, 130, 0.35)' }}
+                style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.15)' }}
             >
-                <MessageCircle size={26} className="group-hover:scale-110 transition-transform drop-shadow-md" />
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-400 rounded-full animate-pulse ring-2 ring-white" />
-                <span className="absolute inset-0 rounded-full bg-[hsl(10,55%,68%,0.3)] animate-ping" />
+                <MessageCircle size={28} fill="currentColor" className="text-white" />
+                <span className="absolute top-0 right-0 w-4 h-4 bg-emerald-500 rounded-full border-2 border-white" />
             </button>
 
-            {/* Chat Window - Premium Rose Gold Design */}
-            <div className={`fixed bottom-6 right-6 z-50 w-[400px] max-w-[calc(100vw-48px)] h-[650px] max-h-[calc(100vh-100px)] bg-gradient-to-b from-background via-background to-secondary/20 border border-accent/20 rounded-3xl shadow-2xl flex flex-col overflow-hidden transition-all duration-300 ${isOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0 pointer-events-none'}`} style={{ boxShadow: '0 25px 60px -10px rgba(205, 145, 130, 0.25)' }}>
-                {/* Header - Rose Gold Gradient */}
-                <div className="flex items-center justify-between p-4 border-b border-accent/20 bg-gradient-to-r from-[hsl(10,55%,68%,0.15)] via-[hsl(15,50%,75%,0.08)] to-[hsl(350,45%,70%,0.05)]">
+            {/* Chat Window - Solid Opaque Luxury Design */}
+            <div className={`fixed bottom-6 right-6 z-50 w-[400px] max-w-[calc(100vw-48px)] h-[600px] max-h-[calc(100vh-100px)] bg-white border border-neutral-100 rounded-2xl shadow-2xl flex flex-col overflow-hidden transition-all duration-300 origin-bottom-right ${isOpen ? 'scale-100 opacity-100' : 'scale-90 opacity-0 pointer-events-none'}`}
+                style={{ boxShadow: '0 10px 40px rgba(0,0,0,0.1)' }}>
+
+                {/* Header - Solid Color */}
+                <div className="flex items-center justify-between p-5 bg-[#E6B4A6] text-white">
                     <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[hsl(10,55%,68%)] via-[hsl(15,50%,70%)] to-[hsl(350,45%,65%)] flex items-center justify-center shadow-lg" style={{ boxShadow: '0 4px 15px rgba(205, 145, 130, 0.35)' }}>
-                            <Sparkles size={22} className="text-white drop-shadow-sm" />
+                        <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                            <Sparkles size={20} className="text-white" />
                         </div>
                         <div>
-                            <h3 className="font-medium text-base">Lumière Assistant</h3>
-                            <p className="text-xs text-muted-foreground flex items-center gap-1.5">
-                                <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                                Online • Ready to help
+                            <h3 className="font-display font-medium text-lg tracking-wide">Concierge</h3>
+                            <p className="text-xs text-white/90 flex items-center gap-1.5 font-sans">
+                                <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full" />
+                                Always Available
                             </p>
                         </div>
                     </div>
                     <button
                         onClick={() => setIsOpen(false)}
-                        className="p-2 hover:bg-secondary/50 rounded-full transition-colors"
+                        className="p-2 hover:bg-white/20 rounded-full transition-colors"
                     >
                         <X size={20} />
                     </button>
@@ -473,11 +474,11 @@ const Chatbot = () => {
 
                             {/* Message Content */}
                             <div className={`max-w-[80%] ${msg.type === 'user' ? 'text-right' : ''}`}>
-                                <div className={`rounded-2xl px-4 py-3 ${msg.type === 'user'
-                                    ? 'bg-gradient-to-br from-accent to-accent/80 text-accent-foreground rounded-br-md'
-                                    : 'bg-secondary/50 rounded-bl-md'
+                                <div className={`rounded-2xl px-5 py-3.5 shadow-sm ${msg.type === 'user'
+                                    ? 'bg-[#E6B4A6] text-white rounded-br-sm'
+                                    : 'bg-gray-100 text-neutral-800 rounded-bl-sm'
                                     }`}>
-                                    <p className="text-sm whitespace-pre-line leading-relaxed">{msg.content}</p>
+                                    <p className="text-sm leading-relaxed">{msg.content}</p>
                                 </div>
 
                                 {/* Action Buttons */}
@@ -573,8 +574,8 @@ const Chatbot = () => {
                     <div ref={messagesEndRef} />
                 </div>
 
-                {/* Input - Rose Gold Gradient Design */}
-                <div className="p-4 border-t border-accent/20 bg-gradient-to-r from-[hsl(10,55%,68%,0.08)] via-[hsl(15,50%,75%,0.05)] to-transparent">
+                {/* Input - Solid and Clean */}
+                <div className="p-4 border-t border-neutral-100 bg-gray-50">
                     <form
                         onSubmit={(e) => {
                             e.preventDefault();
@@ -585,21 +586,20 @@ const Chatbot = () => {
                         <Input
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
-                            placeholder="Ask me anything..."
-                            className="flex-1 bg-background border-accent/30 focus:border-accent focus:ring-2 focus:ring-accent/20 rounded-xl"
+                            placeholder="Type a message..."
+                            className="flex-1 bg-white border-neutral-200 focus:border-[#E6B4A6] focus:ring-1 focus:ring-[#E6B4A6] rounded-full px-4 h-11"
                         />
                         <Button
                             type="submit"
                             size="icon"
                             disabled={!input.trim()}
-                            className="rounded-xl bg-gradient-to-br from-[hsl(10,55%,68%)] to-[hsl(350,45%,60%)] hover:from-[hsl(10,55%,63%)] hover:to-[hsl(350,45%,55%)] shadow-md hover:shadow-lg transition-all"
+                            className="w-11 h-11 rounded-full bg-[#E6B4A6] hover:bg-[#dca596] shadow-sm transition-all"
                         >
-                            <Send size={18} className="text-white" />
+                            <Send size={18} className="text-white ml-0.5" />
                         </Button>
                     </form>
-                    <p className="text-[10px] text-muted-foreground text-center mt-3 flex items-center justify-center gap-1.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-[hsl(10,55%,68%)] to-[hsl(350,45%,65%)]" />
-                        Powered by Lumière AI
+                    <p className="text-[10px] text-neutral-400 text-center mt-3 font-medium tracking-wide">
+                        LUMIÈRE CONCIERGE
                     </p>
                 </div>
             </div>

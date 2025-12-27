@@ -161,7 +161,10 @@ const SearchAutocomplete = ({ onClose, isMobile = false }: SearchAutocompletePro
 
             {/* Premium Dropdown */}
             {isOpen && (
-                <div className={`absolute top-full left-0 right-0 mt-3 bg-background border border-border rounded-2xl shadow-2xl overflow-hidden z-50 animate-in fade-in-0 slide-in-from-top-3 duration-300 ${isMobile ? 'max-h-[70vh]' : 'max-h-[480px]'} overflow-y-auto`}>
+                <div className={`${isMobile
+                    ? 'relative w-full mt-2 mb-4 bg-background/50 border-y border-border shadow-none'
+                    : 'absolute top-full left-0 right-0 mt-3 bg-background border border-border rounded-2xl shadow-2xl'
+                    } overflow-hidden z-50 animate-in fade-in-0 slide-in-from-top-1 duration-200 ${isMobile ? 'max-h-[60vh]' : 'max-h-[480px]'} overflow-y-auto`}>
 
                     {/* Category Quick Filters */}
                     <div className="p-3 border-b border-border/50 bg-gradient-to-r from-secondary/20 to-transparent">
