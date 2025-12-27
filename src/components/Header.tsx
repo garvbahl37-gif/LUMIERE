@@ -270,7 +270,7 @@ const Header = () => {
 
               {/* Category Links */}
               <div className="py-2">
-                <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3">Shop by Category</p>
+                <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3 text-center">Shop by Category</p>
                 <div className="grid grid-cols-2 gap-2">
                   {categories.map((cat) => (
                     <button
@@ -279,7 +279,7 @@ const Header = () => {
                         navigate(`/shop?category=${cat.slug}`);
                         setIsMenuOpen(false);
                       }}
-                      className="flex items-center gap-2 p-3 bg-secondary/30 hover:bg-secondary/50 rounded-xl transition-colors"
+                      className="flex items-center justify-center gap-2 p-3 bg-secondary/30 hover:bg-secondary/50 rounded-xl transition-colors"
                     >
                       <span className="text-sm font-medium">{cat.name}</span>
                     </button>
@@ -289,14 +289,14 @@ const Header = () => {
 
               {/* Quick Actions */}
               <div className="py-2 border-t border-border">
-                <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3">Quick Actions</p>
+                <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3 text-center">Quick Actions</p>
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     onClick={() => {
                       setIsTrackOrderOpen(true);
                       setIsMenuOpen(false);
                     }}
-                    className="flex items-center gap-2 p-3 bg-accent/10 hover:bg-accent/20 rounded-xl transition-colors text-accent"
+                    className="flex items-center justify-center gap-2 p-3 bg-accent/10 hover:bg-accent/20 rounded-xl transition-colors text-accent"
                   >
                     <Truck size={16} />
                     <span className="text-sm font-medium">Track Order</span>
@@ -304,7 +304,7 @@ const Header = () => {
                   <Link
                     to="/wishlist"
                     onClick={() => setIsMenuOpen(false)}
-                    className="flex items-center gap-2 p-3 bg-secondary/30 hover:bg-secondary/50 rounded-xl transition-colors"
+                    className="flex items-center justify-center gap-2 p-3 bg-secondary/30 hover:bg-secondary/50 rounded-xl transition-colors"
                   >
                     <Heart size={16} />
                     <span className="text-sm font-medium">Wishlist</span>
@@ -322,7 +322,7 @@ const Header = () => {
                     <button
                       key={link.name}
                       onClick={() => handleNavClick(link.href, link.isHash)}
-                      className={`flex items-center gap-2 py-3 text-lg font-display tracking-wide transition-colors text-left w-full ${link.highlight
+                      className={`flex items-center justify-center gap-2 py-3 text-lg font-display tracking-wide transition-colors text-center w-full ${link.highlight
                         ? 'text-red-500'
                         : 'text-foreground hover:text-accent'
                         }`}

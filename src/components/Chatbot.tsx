@@ -105,6 +105,7 @@ const Chatbot = () => {
     // Smart product matching with context awareness
     const findProducts = (query: string, ctx: ConversationContext): typeof mockProducts => {
         const lowerQuery = query.toLowerCase();
+        let hasFilter = false;
 
         // Price range detection
         let priceMin = 0;
@@ -112,17 +113,24 @@ const Chatbot = () => {
 
         if (lowerQuery.includes("under $") || lowerQuery.includes("under ")) {
             const match = lowerQuery.match(/under \$?(\d+)/);
-            if (match) priceMax = parseInt(match[1]);
+            if (match) {
+                priceMax = parseInt(match[1]);
+                hasFilter = true;
+            }
         }
         if (lowerQuery.includes("over $") || lowerQuery.includes("above $")) {
             const match = lowerQuery.match(/(over|above) \$?(\d+)/);
-            if (match) priceMin = parseInt(match[2]);
+            if (match) {
+                priceMin = parseInt(match[2]);
+                hasFilter = true;
+            }
         }
         if (lowerQuery.includes("between")) {
             const match = lowerQuery.match(/between \$?(\d+) and \$?(\d+)/);
             if (match) {
                 priceMin = parseInt(match[1]);
                 priceMax = parseInt(match[2]);
+                hasFilter = true;
             }
         }
 
@@ -162,6 +170,7 @@ const Chatbot = () => {
             if (keywords.some(kw => lowerQuery.includes(kw))) {
                 results = results.filter(p => p.category.slug === category);
                 setContext(prev => ({ ...prev, lastCategory: category }));
+                hasFilter = true;
                 break;
             }
         }
@@ -175,6 +184,7 @@ const Chatbot = () => {
                         p.tags.some(t => t.toLowerCase().includes(kw))
                     )
                 );
+                hasFilter = true;
                 break;
             }
         }
@@ -182,15 +192,23 @@ const Chatbot = () => {
         // Sort by relevance
         if (lowerQuery.includes("popular") || lowerQuery.includes("best")) {
             results = results.sort((a, b) => b.numReviews - a.numReviews);
+            hasFilter = true;
         } else if (lowerQuery.includes("new") || lowerQuery.includes("latest")) {
             results = results.filter(p => p.isNew).sort((a, b) => b.rating - a.rating);
+            hasFilter = true;
         } else if (lowerQuery.includes("sale") || lowerQuery.includes("discount")) {
             results = results.filter(p => p.compareAtPrice && p.compareAtPrice > p.price);
+            hasFilter = true;
         } else if (lowerQuery.includes("cheap") || lowerQuery.includes("affordable")) {
             results = results.sort((a, b) => a.price - b.price);
+            hasFilter = true;
         } else if (lowerQuery.includes("luxury") || lowerQuery.includes("premium") || lowerQuery.includes("expensive")) {
             results = results.sort((a, b) => b.price - a.price);
+            hasFilter = true;
         }
+
+        // If no specific filter was applied, don't return generic results
+        if (!hasFilter) return [];
 
         return results.slice(0, 4);
     };
@@ -434,7 +452,10 @@ const Chatbot = () => {
             </button>
 
             {/* Chat Window - Solid Opaque Luxury Design */}
-            <div className={`fixed bottom-6 right-6 z-50 w-[400px] max-w-[calc(100vw-48px)] h-[600px] max-h-[calc(100vh-100px)] bg-white border border-neutral-100 rounded-2xl shadow-2xl flex flex-col overflow-hidden transition-all duration-300 origin-bottom-right ${isOpen ? 'scale-100 opacity-100' : 'scale-90 opacity-0 pointer-events-none'}`}
+            <div className={`fixed z-50 w-[90vw] md:w-[400px] max-w-[calc(100vw-32px)] h-[80vh] md:h-[600px] max-h-[calc(100vh-100px)] bg-white border border-neutral-100 rounded-2xl shadow-2xl flex flex-col overflow-hidden transition-all duration-300 
+                left-1/2 -translate-x-1/2 bottom-[10vh] translate-y-0 
+                md:left-auto md:translate-x-0 md:translate-y-0 md:bottom-6 md:right-6 
+                ${isOpen ? 'scale-100 opacity-100' : 'scale-90 opacity-0 pointer-events-none'}`}
                 style={{ boxShadow: '0 10px 40px rgba(0,0,0,0.1)' }}>
 
                 {/* Header - Solid Color */}
