@@ -61,8 +61,10 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-    console.log(`
+// Only listen if not running on Vercel (Vercel handles the serverless function export)
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+    app.listen(PORT, () => {
+        console.log(`
 ╔═══════════════════════════════════════════════════════╗
 ║                                                       ║
 ║   🌟 Aesthetic Emporium API Server                    ║
@@ -72,7 +74,8 @@ app.listen(PORT, () => {
 ║   API: http://localhost:${PORT}/api                      ║
 ║                                                       ║
 ╚═══════════════════════════════════════════════════════╝
-  `);
-});
+      `);
+    });
+}
 
 export default app;
