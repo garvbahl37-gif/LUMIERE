@@ -1,35 +1,17 @@
+import { Link } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
-import categoryHome from "@/assets/category-home.jpg";
-import categoryBeauty from "@/assets/category-beauty.jpg";
-import categoryAccessories from "@/assets/category-accessories.jpg";
-
-const categories = [
-  {
-    id: 1,
-    name: "Home & Living",
-    description: "Curated objects for mindful spaces",
-    image: categoryHome,
-    productCount: 124,
-  },
-  {
-    id: 2,
-    name: "Beauty & Care",
-    description: "Natural rituals for everyday",
-    image: categoryBeauty,
-    productCount: 86,
-  },
-  {
-    id: 3,
-    name: "Accessories",
-    description: "Timeless pieces to treasure",
-    image: categoryAccessories,
-    productCount: 52,
-  },
-];
+import { mockCategories } from "@/data/mockCategories";
+import { mockProducts } from "@/data/mockProducts";
 
 const Categories = () => {
+  // Calculate product count for each category
+  const categoriesWithCount = mockCategories.map(cat => ({
+    ...cat,
+    productCount: mockProducts.filter(p => p.category._id === cat._id).length
+  }));
+
   return (
-    <section className="py-20 lg:py-32 bg-cream-dark">
+    <section className="py-20 lg:py-32 bg-secondary/30">
       <div className="container mx-auto px-4 lg:px-8">
         {/* Section header */}
         <div className="text-center max-w-2xl mx-auto mb-12 lg:mb-20">
@@ -42,11 +24,11 @@ const Categories = () => {
         </div>
 
         {/* Categories grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-          {categories.map((category, index) => (
-            <a
-              key={category.id}
-              href="#"
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-6">
+          {categoriesWithCount.map((category, index) => (
+            <Link
+              key={category._id}
+              to={`/shop?category=${category.slug}`}
               className="group relative aspect-[4/3] lg:aspect-[3/4] overflow-hidden rounded-sm animate-fade-up opacity-0"
               style={{ animationDelay: `${index * 150}ms` }}
             >
@@ -56,7 +38,7 @@ const Categories = () => {
                 alt={category.name}
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
-              
+
               {/* Overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-charcoal/20 to-transparent" />
 
@@ -79,7 +61,7 @@ const Categories = () => {
                   </div>
                 </div>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
       </div>

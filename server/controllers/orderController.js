@@ -1,0 +1,226 @@
+import Order from '../models/Order.js';
+import Cart from '../models/Cart.js';
+import Product from '../models/Product.js';
+
+// @desc    Get user orders
+// @route   GET /api/orders
+// @access  Private
+export const getOrders = async (req, res) => {
+    try {
+        const orders = await Order.find({ user: req.user._id }).sort({ createdAt: -1 });
+        res.json({
+            success: true,
+            data: orders
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+// @desc    Get single order
+// @route   GET /api/orders/:id
+// @access  Private
+export const getOrder = async (req, res) => {
+    try {
+        const order = await Order.findById(req.params.id);
+
+        if (!order) {
+            return res.status(404).json({
+                success: false,
+                message: 'Order not found'
+            });
+        }
+
+        // Make sure user owns order
+        if (order.user.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+            return res.status(403).json({
+                success: false,
+                message: 'Not authorized to access this order'
+            });
+        }
+
+        res.json({
+            success: true,
+            data: order
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+// @desc    Create order
+// @route   POST /api/orders
+// @access  Private
+export const createOrder = async (req, res) => {
+    try {
+        const { shippingAddress, paymentMethod } = req.body;
+
+        // Get user's cart
+        const cart = await Cart.findOne({ user: req.user._id });
+        if (!cart || cart.items.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'Cart is empty'
+            });
+        }
+
+        // Verify stock for all items
+        for (const item of cart.items) {
+            const product = await Product.findById(item.product);
+            if (!product || product.stock < item.quantity) {
+                return res.status(400).json({
+                    success: false,
+                    message: `Insufficient stock for ${item.name}`
+                });
+            }
+        }
+
+        // Calculate prices
+        const itemsPrice = cart.totalPrice;
+        const shippingPrice = itemsPrice > 100 ? 0 : 10;
+        const taxPrice = Number((0.1 * itemsPrice).toFixed(2));
+        const totalPrice = Number((itemsPrice + shippingPrice + taxPrice).toFixed(2));
+
+        // Create order
+        const order = await Order.create({
+            user: req.user._id,
+            items: cart.items,
+            shippingAddress,
+            paymentMethod,
+            itemsPrice,
+            shippingPrice,
+            taxPrice,
+            totalPrice
+        });
+
+        // Update product stock
+        for (const item of cart.items) {
+            await Product.findByIdAndUpdate(item.product, {
+                $inc: { stock: -item.quantity }
+            });
+        }
+
+        // Clear cart
+        cart.items = [];
+        await cart.save();
+
+        res.status(201).json({
+            success: true,
+            data: order
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+// @desc    Update order status (Admin)
+// @route   PUT /api/orders/:id/status
+// @access  Private/Admin
+export const updateOrderStatus = async (req, res) => {
+    try {
+        const { status, trackingNumber } = req.body;
+
+        const order = await Order.findById(req.params.id);
+        if (!order) {
+            return res.status(404).json({
+                success: false,
+                message: 'Order not found'
+            });
+        }
+
+        order.status = status;
+        if (trackingNumber) {
+            order.trackingNumber = trackingNumber;
+        }
+        if (status === 'delivered') {
+            order.deliveredAt = Date.now();
+        }
+
+        await order.save();
+
+        res.json({
+            success: true,
+            data: order
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+// @desc    Update payment status
+// @route   PUT /api/orders/:id/pay
+// @access  Private
+export const updatePaymentStatus = async (req, res) => {
+    try {
+        const order = await Order.findById(req.params.id);
+
+        if (!order) {
+            return res.status(404).json({
+                success: false,
+                message: 'Order not found'
+            });
+        }
+
+        order.paymentStatus = 'paid';
+        order.paidAt = Date.now();
+        order.status = 'processing';
+
+        await order.save();
+
+        res.json({
+            success: true,
+            data: order
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+// @desc    Get all orders (Admin)
+// @route   GET /api/orders/admin/all
+// @access  Private/Admin
+export const getAllOrders = async (req, res) => {
+    try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 20;
+        const skip = (page - 1) * limit;
+
+        const total = await Order.countDocuments();
+        const orders = await Order.find()
+            .populate('user', 'name email')
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+
+        res.json({
+            success: true,
+            data: orders,
+            pagination: {
+                page,
+                limit,
+                total,
+                pages: Math.ceil(total / limit)
+            }
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};

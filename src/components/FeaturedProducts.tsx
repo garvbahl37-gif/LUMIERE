@@ -1,45 +1,29 @@
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import ProductCard from "./ProductCard";
-import product1 from "@/assets/product-1.jpg";
-import product2 from "@/assets/product-2.jpg";
-import product3 from "@/assets/product-3.jpg";
-import product4 from "@/assets/product-4.jpg";
-
-const products = [
-  {
-    id: 1,
-    image: product1,
-    name: "Ceramic Vase Collection",
-    price: 89,
-    category: "Home",
-    isNew: true,
-  },
-  {
-    id: 2,
-    image: product2,
-    name: "Artisan Soy Candle",
-    price: 48,
-    category: "Home",
-    isNew: false,
-  },
-  {
-    id: 3,
-    image: product3,
-    name: "Linen Throw Blanket",
-    price: 145,
-    category: "Textiles",
-    isNew: true,
-  },
-  {
-    id: 4,
-    image: product4,
-    name: "Botanical Face Serum",
-    price: 68,
-    category: "Beauty",
-    isNew: false,
-  },
-];
+import { productService, Product } from "@/services/productService";
 
 const FeaturedProducts = () => {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await productService.getFeaturedProducts(8);
+        if (response.success) {
+          setProducts(response.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch featured products:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
   return (
     <section className="py-20 lg:py-32 bg-background">
       <div className="container mx-auto px-4 lg:px-8">
@@ -53,26 +37,49 @@ const FeaturedProducts = () => {
               Curated Essentials
             </h2>
           </div>
-          <a
-            href="#"
+          <Link
+            to="/shop"
             className="text-sm uppercase tracking-wider text-foreground hover:text-accent transition-smooth underline underline-offset-4 animate-fade-up opacity-0 animation-delay-200"
           >
             View All Products
-          </a>
+          </Link>
         </div>
 
         {/* Product grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-          {products.map((product, index) => (
-            <div
-              key={product.id}
-              className="animate-fade-up opacity-0"
-              style={{ animationDelay: `${(index + 1) * 100 + 200}ms` }}
-            >
-              <ProductCard {...product} />
-            </div>
-          ))}
-        </div>
+        {isLoading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="animate-pulse">
+                <div className="aspect-[3/4] bg-muted rounded-lg mb-4" />
+                <div className="h-4 bg-muted rounded w-2/3 mb-2" />
+                <div className="h-4 bg-muted rounded w-1/3" />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+            {products.map((product, index) => (
+              <div
+                key={product._id}
+                className="animate-fade-up opacity-0"
+                style={{ animationDelay: `${(index + 1) * 100 + 200}ms` }}
+              >
+                <ProductCard
+                  id={product._id}
+                  image={product.image}
+                  name={product.name}
+                  price={product.price}
+                  compareAtPrice={product.compareAtPrice}
+                  category={product.categoryName}
+                  isNew={product.isNew}
+                  rating={product.rating}
+                  numReviews={product.numReviews}
+                  index={index}
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
