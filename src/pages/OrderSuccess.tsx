@@ -3,14 +3,15 @@ import { useParams, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
+import { orderService } from "@/services/orderService";
 import { CheckCircle, Package, ArrowRight, Truck } from "lucide-react";
 
-interface LocalOrder {
+interface DisplayOrder {
     id: string;
     items: any[];
-    shipping: {
+    shipping?: {
         fullName: string;
-        email: string;
+        email?: string;
         street: string;
         city: string;
         state: string;
@@ -18,9 +19,6 @@ interface LocalOrder {
         country: string;
         phone: string;
     };
-    subtotal: number;
-    shippingCost: number;
-    tax: number;
     total: number;
     date: string;
     status: string;
@@ -28,17 +26,57 @@ interface LocalOrder {
 
 const OrderSuccess = () => {
     const { id } = useParams<{ id: string }>();
-    const [order, setOrder] = useState<LocalOrder | null>(null);
+    const [order, setOrder] = useState<DisplayOrder | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        if (id) {
-            // Fetch order from localStorage
-            const orders = JSON.parse(localStorage.getItem('lumiere-orders') || '[]');
-            const foundOrder = orders.find((o: LocalOrder) => o.id === id);
-            if (foundOrder) {
-                setOrder(foundOrder);
+        const loadOrder = async () => {
+            if (!id) {
+                setIsLoading(false);
+                return;
             }
-        }
+
+            // Check if it's a MongoDB ObjectId format (24 hex chars)
+            const isMongoId = /^[0-9a-fA-F]{24}$/.test(id);
+
+            if (isMongoId) {
+                // Try to fetch from database
+                try {
+                    const response = await orderService.getOrder(id);
+                    if (response.success && response.data) {
+                        setOrder({
+                            id: response.data._id,
+                            items: response.data.items,
+                            shipping: response.data.shippingAddress,
+                            total: response.data.totalPrice,
+                            date: response.data.createdAt,
+                            status: response.data.status
+                        });
+                        setIsLoading(false);
+                        return;
+                    }
+                } catch (error) {
+                    console.error("Failed to fetch order from database:", error);
+                }
+            }
+
+            // Fallback: try localStorage
+            const orders = JSON.parse(localStorage.getItem('lumiere-orders') || '[]');
+            const foundOrder = orders.find((o: any) => o.id === id);
+            if (foundOrder) {
+                setOrder({
+                    id: foundOrder.id,
+                    items: foundOrder.items,
+                    shipping: foundOrder.shipping,
+                    total: foundOrder.total,
+                    date: foundOrder.date,
+                    status: foundOrder.status
+                });
+            }
+            setIsLoading(false);
+        };
+
+        loadOrder();
     }, [id]);
 
     return (

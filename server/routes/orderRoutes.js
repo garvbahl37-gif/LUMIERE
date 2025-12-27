@@ -3,6 +3,7 @@ import {
     getOrders,
     getOrder,
     createOrder,
+    createOrderDirect,
     updateOrderStatus,
     updatePaymentStatus,
     getAllOrders,
@@ -20,6 +21,7 @@ router.use(protect);
 
 router.get('/', getOrders);
 router.post('/', createOrder);
+router.post('/direct', createOrderDirect);
 router.get('/admin/all', admin, getAllOrders);
 router.get('/:id', getOrder);
 router.put('/:id/pay', updatePaymentStatus);

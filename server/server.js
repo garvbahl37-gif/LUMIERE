@@ -20,7 +20,13 @@ const app = express();
 
 // Middleware
 app.use(cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    origin: [
+        'http://localhost:5173',
+        'http://localhost:8080',
+        'http://127.0.0.1:5173',
+        'http://127.0.0.1:8080',
+        process.env.CLIENT_URL
+    ].filter(Boolean),
     credentials: true
 }));
 app.use(express.json());
@@ -57,6 +63,13 @@ app.use((err, req, res, next) => {
         success: false,
         message: err.message || 'Server Error'
     });
+});
+
+process.on('unhandledRejection', (err) => {
+    console.log('UNHANDLED REJECTION! 💥');
+    console.log(err.name, err.message);
+    console.log(err.stack);
+    // process.exit(1); // Don't exit, just log for now to keep server alive
 });
 
 const PORT = process.env.PORT || 5000;

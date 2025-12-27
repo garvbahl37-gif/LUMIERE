@@ -70,6 +70,26 @@ export const orderService = {
         return response.data;
     },
 
+    // Create order directly with items from frontend cart
+    async createOrderDirect(data: {
+        items: Array<{
+            _id?: string;
+            name: string;
+            image: string;
+            price: number;
+            quantity: number;
+        }>;
+        shippingAddress: ShippingAddress;
+        paymentMethod: 'card' | 'paypal' | 'cod';
+        itemsPrice: number;
+        shippingPrice: number;
+        taxPrice: number;
+        totalPrice: number;
+    }): Promise<{ success: boolean; data: Order }> {
+        const response = await api.post('/orders/direct', data);
+        return response.data;
+    },
+
     async updatePaymentStatus(orderId: string): Promise<{ success: boolean; data: Order }> {
         const response = await api.put(`/orders/${orderId}/pay`);
         return response.data;

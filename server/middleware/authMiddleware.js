@@ -1,6 +1,14 @@
 
 import { ClerkExpressWithAuth } from '@clerk/clerk-sdk-node';
+import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
+
+// Generate JWT Token (for legacy auth compatibility)
+export const generateToken = (id) => {
+    return jwt.sign({ id }, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRE || '30d'
+    });
+};
 
 // Middleware to verify Clerk Token and Sync User to MongoDB
 export const protect = async (req, res, next) => {
@@ -16,75 +24,87 @@ export const protect = async (req, res, next) => {
     try {
         // Check for Bearer token
         if (!req.headers.authorization || !req.headers.authorization.startsWith('Bearer ')) {
+            console.log('Auth Failed: No token provided');
             return res.status(401).json({ success: false, message: 'Not authorized, no token' });
         }
 
         const token = req.headers.authorization.split(' ')[1];
+        // console.log('Verifying token:', token.substring(0, 10) + '...');
 
-        // Verify using Clerk (We need the Secret Key for this, usually CLERK_SECRET_KEY in env)
-        // Note: For backend verification we need CLERK_SECRET_KEY.
-        // If the user hasn't added it to Vercel Backend Env, this will fail.
-
-        // Let's use the 'ClerkExpressWithAuth' compatible approach if possible, 
-        // but that requires 'req' to be processed by Clerk middleware first.
-        // Let's try manual verification if we have the SDK.
-
-        // Wait, 'ClerkExpressWithAuth' is the standard way.
-        // It populates req.auth.
-
-        // Let's Dynamically import Clerk (since we just installed it) to avoid load errors if it failed
         const { verifyToken } = await import('@clerk/clerk-sdk-node');
 
         // Verify token (claims)
-        const claims = await verifyToken(token, {
-            secretKey: process.env.CLERK_SECRET_KEY
-        });
+        let claims;
+        try {
+            claims = await verifyToken(token, {
+                secretKey: process.env.CLERK_SECRET_KEY
+            });
+        } catch (tokenError) {
+            console.error('Token Verification Failed:', tokenError.message);
+            // console.error('Full Token Error:', tokenError);
+            return res.status(401).json({ success: false, message: 'Token verification failed: ' + tokenError.message });
+        }
+
 
         // 2. Sync / Find User in MongoDB
         const clerkId = claims.sub;
-        const email = claims.email; // Note: claims might not have email directly depending on config, but usually does in session token? 
-        // Actually standard session tokens might not have email. We might need to fetch the user from Clerk API if it's a new user.
+        console.log('Token Verified. Clerk ID:', clerkId);
 
-        // Let's try to find by clerkId first.
-        let user = await User.findOne({ clerkId });
+        // Bypassing Mongoose findOne due to potential crash/validation issue
+        console.log('Searching MongoDB (Native) for user...');
+        let userBuffer = null;
+        try {
+            userBuffer = await mongoose.connection.db.collection('users').findOne({ clerkId });
+        } catch (dbError) {
+            console.error('Native DB Find Error:', dbError);
+        }
 
+        let user = userBuffer;
+
+        // If not found via Native, fallback to Mongoose creation logic (or lookup by email)
         if (!user) {
-            // JIT: Create User
-            // We need email/name. If token doesn't have it, we might need to fetch it.
-            // But let's assume for now we can get minimal info or we fetch from Clerk.
+            console.log('User not found. JIT creation from token claims (minimal)...');
+            // Use claims or placeholders. 
+            // Note: email is unique and required.
+            const email = claims.email || `${clerkId}@lumiere.com`;
+            const name = claims.name || 'User';
 
-            // To fetch from Clerk we need the clerk client.
-            const { users } = await import('@clerk/clerk-sdk-node');
-            const clerkUser = await users.getUser(clerkId);
-
-            const email = clerkUser.emailAddresses[0]?.emailAddress;
-            const name = clerkUser.firstName ? `${clerkUser.firstName} ${clerkUser.lastName || ''}` : 'User';
-
-            // Check if user exists by EMAIL (legacy user who signed up before Clerk)
-            // If so, link them.
-            user = await User.findOne({ email });
-
-            if (user) {
-                user.clerkId = clerkId;
-                await user.save();
-            } else {
-                // Create new
+            try {
+                // Try to create directly
                 user = await User.create({
                     name,
                     email,
                     clerkId,
-                    password: 'clerk-auth-placeholder-' + Math.random(), // Dummy password
-                    role: 'user' // Default role
+                    password: 'jit-created',
+                    role: 'user'
                 });
+            } catch (createError) {
+                // If create fails (e.g. email exists?), try to find by email
+                console.log('JIT Create failed, trying find by email...', createError.message);
+                if (createError.code === 11000) { // Duplicate key
+                    user = await User.findOne({ email });
+                    if (user) {
+                        user.clerkId = clerkId;
+                        await user.save();
+                    } else {
+                        // Maybe clerkId duplicate?
+                        user = await User.findOne({ clerkId });
+                        // If still null, then error
+                        if (!user) throw createError;
+                    }
+                } else {
+                    throw createError;
+                }
             }
         }
 
+        console.log('Auth Success. User _id:', user ? user._id : 'null');
         req.user = user;
         next();
 
     } catch (error) {
-        console.error('Auth Error:', error);
-        res.status(401).json({ success: false, message: 'Not authorized, token failed: ' + error.message });
+        console.error('CRITICAL Auth Middleware Error:', error);
+        res.status(401).json({ success: false, message: 'Not authorized: ' + error.message });
     }
 };
 

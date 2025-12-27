@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
+import { useAuth as useClerkAuth } from "@clerk/clerk-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import StripePaymentForm from "@/components/StripePaymentForm";
@@ -9,6 +10,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
+import { orderService } from "@/services/orderService";
 import { ArrowLeft, ShoppingBag } from "lucide-react";
 import { toast } from "sonner";
 
@@ -29,6 +32,8 @@ interface ShippingAddress {
 const Checkout = () => {
     const navigate = useNavigate();
     const { items, totalPrice, clearCart } = useCart();
+    const { isAuthenticated } = useAuth();
+    const { getToken } = useClerkAuth();
     const [step, setStep] = useState<'shipping' | 'payment'>('shipping');
     const [isLoading, setIsLoading] = useState(false);
 
@@ -95,11 +100,50 @@ const Checkout = () => {
         setStep('payment');
     };
 
-    const handlePaymentSuccess = () => {
-        // Generate order ID
-        const orderId = `ORD-${Date.now()}`;
+    const handlePaymentSuccess = async () => {
+        setIsLoading(true);
 
-        // Save order to localStorage
+        try {
+            // If user is authenticated, save to MongoDB
+            if (isAuthenticated) {
+                // Get fresh token and update localStorage (so axios interceptor picks it up)
+                const token = await getToken();
+                if (token) {
+                    localStorage.setItem('token', token);
+                }
+
+                const response = await orderService.createOrderDirect({
+                    items: items.map(item => ({
+                        _id: item._id,
+                        name: item.name,
+                        image: item.image,
+                        price: item.price,
+                        quantity: item.quantity
+                    })),
+                    shippingAddress: shipping,
+                    paymentMethod: 'card',
+                    itemsPrice: totalPrice,
+                    shippingPrice: shippingCost,
+                    taxPrice: tax,
+                    totalPrice: orderTotal
+                });
+
+                if (response.success) {
+                    // Clear cart
+                    clearCart();
+                    toast.success('Order placed successfully!');
+                    // Navigate to success page with MongoDB order ID
+                    navigate(`/order-success/${response.data._id}`);
+                    return;
+                }
+            }
+        } catch (error) {
+            console.error('Failed to save order to database:', error);
+            // Fall through to localStorage fallback
+        }
+
+        // Fallback: Save order to localStorage (for guests or if API fails)
+        const orderId = `ORD-${Date.now()}`;
         const order = {
             id: orderId,
             items,
@@ -117,6 +161,8 @@ const Checkout = () => {
 
         // Clear cart
         clearCart();
+
+        setIsLoading(false);
 
         // Navigate to success page
         navigate(`/order-success/${orderId}`);

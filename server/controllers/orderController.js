@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import Order from '../models/Order.js';
 import Cart from '../models/Cart.js';
 import Product from '../models/Product.js';
@@ -165,6 +166,73 @@ export const createOrder = async (req, res) => {
             data: order
         });
     } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+// @desc    Create order directly with items (for frontend cart)
+// @route   POST /api/orders/direct
+// @access  Private
+export const createOrderDirect = async (req, res) => {
+    try {
+        const { items, shippingAddress, paymentMethod, itemsPrice, shippingPrice, taxPrice, totalPrice } = req.body;
+
+        if (!items || items.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'No items provided'
+            });
+        }
+
+        // Format items for order schema - product ID may be optional for local mock products
+        const orderItems = items.map(item => {
+            // Check if product ID is a valid MongoDB ObjectId
+            const isValidObjectId = (id) => /^[0-9a-fA-F]{24}$/.test(id);
+            const productId = (item._id && isValidObjectId(item._id)) ? item._id :
+                (item.product && isValidObjectId(item.product)) ? item.product :
+                    new mongoose.Types.ObjectId(); // Generate valid ID for mock products
+
+            return {
+                product: productId,
+                name: item.name,
+                image: item.image,
+                price: item.price,
+                quantity: item.quantity
+            };
+        });
+
+        // Create order
+        const order = await Order.create({
+            user: req.user._id,
+            items: orderItems,
+            shippingAddress: {
+                fullName: shippingAddress.fullName,
+                street: shippingAddress.street,
+                city: shippingAddress.city,
+                state: shippingAddress.state,
+                zipCode: shippingAddress.zipCode,
+                country: shippingAddress.country,
+                phone: shippingAddress.phone
+            },
+            paymentMethod: paymentMethod || 'card',
+            paymentStatus: 'paid',
+            itemsPrice: itemsPrice || 0,
+            shippingPrice: shippingPrice || 0,
+            taxPrice: taxPrice || 0,
+            totalPrice: totalPrice || 0,
+            status: 'processing',
+            paidAt: new Date()
+        });
+
+        res.status(201).json({
+            success: true,
+            data: order
+        });
+    } catch (error) {
+        console.error('Create order error:', error);
         res.status(500).json({
             success: false,
             message: error.message
