@@ -5,13 +5,17 @@ import {
     createOrder,
     updateOrderStatus,
     updatePaymentStatus,
-    getAllOrders
+    getAllOrders,
+    trackOrder
 } from '../controllers/orderController.js';
 import { protect, admin } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-// All order routes require authentication
+// Public routes (no authentication required)
+router.get('/track/:id', trackOrder);
+
+// Protected routes (require authentication)
 router.use(protect);
 
 router.get('/', getOrders);
@@ -22,3 +26,4 @@ router.put('/:id/pay', updatePaymentStatus);
 router.put('/:id/status', admin, updateOrderStatus);
 
 export default router;
+

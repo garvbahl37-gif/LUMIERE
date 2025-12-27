@@ -199,7 +199,11 @@ function createProduct(id: number, name: string, catId: string, catName: string,
     };
 }
 
-export const mockProducts: MockProduct[] = [
+// Import men's products
+import { mockMensProducts } from './mockMensProducts';
+
+// Women's products
+const womensProducts: MockProduct[] = [
     // HANDBAGS
     ...handbagNames.map((name, i) => createProduct(i + 1, name, "cat-1", "Handbags", "handbags", handbagsImages[i], 850 + i * 80)),
 
@@ -216,4 +220,11 @@ export const mockProducts: MockProduct[] = [
     ...accessoryNames.map((name, i) => createProduct(i + 101, name, "cat-5", "Accessories", "accessories", accessoriesImages[i], 150 + i * 50))
 ];
 
+// Combined products (Women's + Men's)
+export const mockProducts: MockProduct[] = [
+    ...womensProducts,
+    ...mockMensProducts as unknown as MockProduct[]
+];
+
 export default mockProducts;
+

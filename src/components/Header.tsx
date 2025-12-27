@@ -15,12 +15,14 @@ const Header = () => {
   const { items: wishlistItems } = useWishlist();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
+  const [isWomenDropdownOpen, setIsWomenDropdownOpen] = useState(false);
+  const [isMenDropdownOpen, setIsMenDropdownOpen] = useState(false);
   const [isTrackOrderOpen, setIsTrackOrderOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const womenDropdownRef = useRef<HTMLDivElement>(null);
+  const menDropdownRef = useRef<HTMLDivElement>(null);
 
-  const categories = [
+  const womenCategories = [
     { name: "Handbags", slug: "handbags" },
     { name: "Jewelry", slug: "jewelry" },
     { name: "Shoes", slug: "shoes" },
@@ -28,10 +30,19 @@ const Header = () => {
     { name: "Accessories", slug: "accessories" },
   ];
 
+  const menCategories = [
+    { name: "Watches", slug: "mens-watches" },
+    { name: "Bags", slug: "mens-bags" },
+    { name: "Shoes", slug: "mens-shoes" },
+    { name: "Suits", slug: "mens-suits" },
+    { name: "Accessories", slug: "mens-accessories" },
+  ];
+
   const navLinks = [
     { name: "Home", href: "/", icon: <Home size={14} /> },
+    { name: "Women", href: "/shop?gender=women", hasDropdown: true, dropdownType: "women" },
+    { name: "Men", href: "/shop?gender=men", hasDropdown: true, dropdownType: "men" },
     { name: "New Arrivals", href: "/shop?isNew=true", icon: <Sparkles size={14} /> },
-    { name: "Collections", href: "/shop", hasDropdown: true },
     { name: "Sale", href: "/shop?sale=true", icon: <Tag size={14} />, highlight: true },
     { name: "About", href: "/#about", isHash: true },
   ];
@@ -47,8 +58,11 @@ const Header = () => {
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setIsCategoryDropdownOpen(false);
+      if (womenDropdownRef.current && !womenDropdownRef.current.contains(e.target as Node)) {
+        setIsWomenDropdownOpen(false);
+      }
+      if (menDropdownRef.current && !menDropdownRef.current.contains(e.target as Node)) {
+        setIsMenDropdownOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -57,7 +71,8 @@ const Header = () => {
 
   const handleNavClick = (href: string, isHash?: boolean) => {
     setIsMenuOpen(false);
-    setIsCategoryDropdownOpen(false);
+    setIsWomenDropdownOpen(false);
+    setIsMenDropdownOpen(false);
     if (isHash) {
       if (location.pathname === "/") {
         const element = document.getElementById("about");
@@ -97,52 +112,70 @@ const Header = () => {
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center gap-8">
               {navLinks.map((link) => (
-                <div key={link.name} className="relative" ref={link.hasDropdown ? dropdownRef : undefined}>
+                <div
+                  key={link.name}
+                  className="relative"
+                  ref={link.dropdownType === "women" ? womenDropdownRef : link.dropdownType === "men" ? menDropdownRef : undefined}
+                >
                   {link.hasDropdown ? (
                     <>
                       <button
-                        onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
+                        onClick={() => {
+                          if (link.dropdownType === "women") {
+                            setIsWomenDropdownOpen(!isWomenDropdownOpen);
+                            setIsMenDropdownOpen(false);
+                          } else if (link.dropdownType === "men") {
+                            setIsMenDropdownOpen(!isMenDropdownOpen);
+                            setIsWomenDropdownOpen(false);
+                          }
+                        }}
                         className="flex items-center gap-1.5 font-display font-semibold text-sm tracking-widest uppercase text-foreground/80 hover:text-accent transition-all cursor-pointer group"
                       >
                         {link.name}
                         <ChevronDown
                           size={12}
-                          className={`transition-transform duration-200 text-muted-foreground group-hover:text-accent ${isCategoryDropdownOpen ? 'rotate-180' : ''}`}
+                          className={`transition-transform duration-200 text-muted-foreground group-hover:text-accent ${(link.dropdownType === "women" && isWomenDropdownOpen) ||
+                            (link.dropdownType === "men" && isMenDropdownOpen)
+                            ? 'rotate-180' : ''
+                            }`}
                         />
                       </button>
 
-                      {/* Mega Menu Dropdown */}
-                      {isCategoryDropdownOpen && (
-                        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-5 bg-white/95 backdrop-blur-md border-t-2 border-accent shadow-premium p-6 min-w-[320px] animate-in fade-in-0 slide-in-from-top-2 duration-300 rounded-b-sm">
-                          <div className="grid gap-2">
-                            {categories.map((cat) => (
-                              <button
-                                key={cat.slug}
-                                onClick={() => {
-                                  navigate(`/shop?category=${cat.slug}`);
-                                  setIsCategoryDropdownOpen(false);
-                                }}
-                                className="flex items-center gap-4 p-3 hover:bg-neutral-50 rounded-md transition-colors text-left group"
-                              >
-                                <span className="font-display text-base text-neutral-600 group-hover:text-accent group-hover:translate-x-1 transition-all duration-300">
-                                  {cat.name}
-                                </span>
-                              </button>
-                            ))}
-                            <div className="border-t border-neutral-100 mt-3 pt-3">
-                              <button
-                                onClick={() => {
-                                  navigate('/shop');
-                                  setIsCategoryDropdownOpen(false);
-                                }}
-                                className="w-full flex items-center gap-3 p-3 hover:bg-neutral-50 rounded-md transition-colors text-left text-xs uppercase tracking-widest font-bold text-accent"
-                              >
-                                View All Collections
-                              </button>
+                      {/* Dropdown Menu */}
+                      {((link.dropdownType === "women" && isWomenDropdownOpen) ||
+                        (link.dropdownType === "men" && isMenDropdownOpen)) && (
+                          <div className="absolute top-full left-1/2 -translate-x-1/2 mt-5 bg-white border-t-2 border-accent shadow-xl p-4 min-w-[200px] animate-in fade-in-0 slide-in-from-top-2 duration-200 rounded-lg">
+                            <div className="grid gap-1">
+                              {(link.dropdownType === "women" ? womenCategories : menCategories).map((cat) => (
+                                <button
+                                  key={cat.slug}
+                                  onClick={() => {
+                                    navigate(`/shop?category=${cat.slug}`);
+                                    setIsWomenDropdownOpen(false);
+                                    setIsMenDropdownOpen(false);
+                                  }}
+                                  className="flex items-center gap-3 px-4 py-2.5 hover:bg-neutral-50 rounded-lg transition-colors text-left group"
+                                >
+                                  <span className="text-sm text-neutral-700 group-hover:text-accent group-hover:translate-x-1 transition-all duration-200">
+                                    {cat.name}
+                                  </span>
+                                </button>
+                              ))}
+                              <div className="border-t border-neutral-100 mt-2 pt-2">
+                                <button
+                                  onClick={() => {
+                                    navigate(link.href);
+                                    setIsWomenDropdownOpen(false);
+                                    setIsMenDropdownOpen(false);
+                                  }}
+                                  className="w-full flex items-center gap-2 px-4 py-2.5 hover:bg-accent/10 rounded-lg transition-colors text-left text-xs uppercase tracking-wider font-bold text-accent"
+                                >
+                                  View All {link.name}
+                                </button>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      )}
+                        )}
                     </>
                   ) : (
                     <button
@@ -268,22 +301,61 @@ const Header = () => {
             <nav className="container mx-auto px-4 py-6 flex flex-col gap-4">
 
 
-              {/* Category Links */}
+
+
+              {/* Shop Links - Women */}
               <div className="py-2">
-                <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3 text-center">Shop by Category</p>
-                <div className="grid grid-cols-2 gap-2">
-                  {categories.map((cat) => (
+                <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3 text-center">Women's Collection</p>
+                <div className="grid grid-cols-3 gap-2">
+                  {womenCategories.map((cat) => (
                     <button
                       key={cat.slug}
                       onClick={() => {
                         navigate(`/shop?category=${cat.slug}`);
                         setIsMenuOpen(false);
                       }}
-                      className="flex items-center justify-center gap-2 p-3 bg-secondary/30 hover:bg-secondary/50 rounded-xl transition-colors"
+                      className="flex items-center justify-center p-3 bg-gradient-to-br from-[hsl(45_85%_50%/0.1)] to-transparent hover:from-[hsl(45_85%_50%/0.2)] rounded-lg transition-all border border-[hsl(45_85%_50%/0.15)]"
                     >
-                      <span className="text-sm font-medium">{cat.name}</span>
+                      <span className="text-xs font-medium text-neutral-700">{cat.name}</span>
                     </button>
                   ))}
+                  <button
+                    onClick={() => {
+                      navigate('/shop?gender=women');
+                      setIsMenuOpen(false);
+                    }}
+                    className="col-span-3 flex items-center justify-center gap-2 p-2 text-[hsl(45_85%_45%)] text-xs font-semibold uppercase tracking-wider"
+                  >
+                    View All Women →
+                  </button>
+                </div>
+              </div>
+
+              {/* Shop Links - Men */}
+              <div className="py-2 border-t border-border pt-4">
+                <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3 text-center">Men's Collection</p>
+                <div className="grid grid-cols-3 gap-2">
+                  {menCategories.map((cat) => (
+                    <button
+                      key={cat.slug}
+                      onClick={() => {
+                        navigate(`/shop?category=${cat.slug}`);
+                        setIsMenuOpen(false);
+                      }}
+                      className="flex items-center justify-center p-3 bg-gradient-to-br from-charcoal/5 to-transparent hover:from-charcoal/10 rounded-lg transition-all border border-charcoal/10"
+                    >
+                      <span className="text-xs font-medium text-neutral-700">{cat.name}</span>
+                    </button>
+                  ))}
+                  <button
+                    onClick={() => {
+                      navigate('/shop?gender=men');
+                      setIsMenuOpen(false);
+                    }}
+                    className="col-span-3 flex items-center justify-center gap-2 p-2 text-charcoal text-xs font-semibold uppercase tracking-wider"
+                  >
+                    View All Men →
+                  </button>
                 </div>
               </div>
 
@@ -317,20 +389,18 @@ const Header = () => {
 
               {/* Nav Links */}
               <div className="py-2 border-t border-border">
-                {navLinks.map((link) => (
-                  !link.hasDropdown && (
-                    <button
-                      key={link.name}
-                      onClick={() => handleNavClick(link.href, link.isHash)}
-                      className={`flex items-center justify-center gap-2 py-3 text-lg font-display tracking-wide transition-colors text-center w-full ${link.highlight
-                        ? 'text-red-500'
-                        : 'text-foreground hover:text-accent'
-                        }`}
-                    >
-                      {link.icon}
-                      {link.name}
-                    </button>
-                  )
+                {navLinks.filter(link => link.name !== "Women" && link.name !== "Men").map((link) => (
+                  <button
+                    key={link.name}
+                    onClick={() => handleNavClick(link.href, link.isHash)}
+                    className={`flex items-center justify-center gap-2 py-3 text-lg font-display tracking-wide transition-colors text-center w-full ${link.highlight
+                      ? 'text-red-500'
+                      : 'text-foreground hover:text-accent'
+                      }`}
+                  >
+                    {link.icon}
+                    {link.name}
+                  </button>
                 ))}
               </div>
 

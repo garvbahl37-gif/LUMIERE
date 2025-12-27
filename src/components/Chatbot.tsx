@@ -55,8 +55,8 @@ const Chatbot = () => {
                 {
                     id: "welcome",
                     type: "bot",
-                    content: `${greeting}! ✨ Welcome to Lumière. I'm your personal shopping assistant. I can help you discover luxury pieces, track orders, find the perfect size, or answer any questions. What would you like to explore today?`,
-                    quickReplies: ["🛍️ Shop Now", "🆕 New Arrivals", "💎 Best Sellers", "📦 Track Order", "❓ Help"],
+                    content: `${greeting}! Welcome to Lumière. I'm your personal shopping assistant. How can I help you today?`,
+                    quickReplies: ["Shop Now", "New Arrivals", "Best Sellers", "Track Order", "Help"],
                     actions: [
                         { label: "Browse Collections", action: "browse", icon: <ShoppingBag size={14} /> },
                         { label: "Get Recommendations", action: "recommend", icon: <Sparkles size={14} /> },
@@ -440,35 +440,34 @@ const Chatbot = () => {
 
     return (
         <>
-            {/* Chat Button - Solid Premium Rose Gold */}
+            {/* Chat Button - Rich Gold */}
             <button
                 onClick={() => setIsOpen(true)}
-                className={`fixed bottom-6 right-6 z-50 w-16 h-16 rounded-full bg-[#E6B4A6] text-white shadow-2xl hover:scale-105 hover:bg-[#dca596] transition-all duration-300 flex items-center justify-center group ${isOpen ? 'scale-0' : 'scale-100'}`}
+                className={`fixed bottom-6 right-6 z-50 w-16 h-16 rounded-full bg-gradient-to-br from-[#C9A96E] via-[#B8956A] to-[#A47E52] text-white shadow-2xl hover:scale-110 hover:shadow-[0_12px_40px_rgba(180,140,60,0.4)] transition-all duration-300 flex items-center justify-center group ${isOpen ? 'scale-0' : 'scale-100'}`}
                 aria-label="Open chat"
-                style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.15)' }}
             >
-                <MessageCircle size={28} fill="currentColor" className="text-white" />
-                <span className="absolute top-0 right-0 w-4 h-4 bg-emerald-500 rounded-full border-2 border-white" />
+                <MessageCircle size={26} className="text-white" />
+                <span className="absolute top-0 right-0 w-4 h-4 bg-emerald-500 rounded-full border-2 border-white animate-pulse" />
             </button>
 
-            {/* Chat Window - Solid Opaque Luxury Design */}
-            <div className={`fixed z-50 w-[90vw] md:w-[400px] max-w-[calc(100vw-32px)] h-[80vh] md:h-[600px] max-h-[calc(100vh-100px)] bg-white border border-neutral-100 rounded-2xl shadow-2xl flex flex-col overflow-hidden transition-all duration-300 
+            {/* Chat Window - Premium Design */}
+            <div className={`fixed z-50 w-[92vw] md:w-[400px] max-w-[calc(100vw-24px)] h-[80vh] md:h-[580px] max-h-[calc(100vh-100px)] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden transition-all duration-300 
                 left-1/2 -translate-x-1/2 bottom-[10vh] translate-y-0 
                 md:left-auto md:translate-x-0 md:translate-y-0 md:bottom-6 md:right-6 
                 ${isOpen ? 'scale-100 opacity-100' : 'scale-90 opacity-0 pointer-events-none'}`}
-                style={{ boxShadow: '0 10px 40px rgba(0,0,0,0.1)' }}>
+                style={{ boxShadow: '0 25px 50px rgba(0,0,0,0.2)' }}>
 
-                {/* Header - Solid Color */}
-                <div className="flex items-center justify-between p-5 bg-[#E6B4A6] text-white">
+                {/* Header - Rich Deep Gold */}
+                <div className="flex items-center justify-between p-4 bg-gradient-to-r from-[#C9A96E] via-[#B8956A] to-[#A47E52] text-white">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                        <div className="w-10 h-10 rounded-full bg-white/25 flex items-center justify-center">
                             <Sparkles size={20} className="text-white" />
                         </div>
                         <div>
-                            <h3 className="font-display font-medium text-lg tracking-wide">Concierge</h3>
-                            <p className="text-xs text-white/90 flex items-center gap-1.5 font-sans">
+                            <h3 className="font-display font-semibold text-base">Lumière Concierge</h3>
+                            <p className="text-[11px] text-white/90 flex items-center gap-1.5">
                                 <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full" />
-                                Always Available
+                                Online • Ready to help
                             </p>
                         </div>
                     </div>
@@ -476,7 +475,7 @@ const Chatbot = () => {
                         onClick={() => setIsOpen(false)}
                         className="p-2 hover:bg-white/20 rounded-full transition-colors"
                     >
-                        <X size={20} />
+                        <X size={18} />
                     </button>
                 </div>
 
@@ -494,22 +493,22 @@ const Chatbot = () => {
                             </div>
 
                             {/* Message Content */}
-                            <div className={`max-w-[80%] ${msg.type === 'user' ? 'text-right' : ''}`}>
-                                <div className={`rounded-2xl px-5 py-3.5 shadow-sm ${msg.type === 'user'
-                                    ? 'bg-[#E6B4A6] text-white rounded-br-sm'
-                                    : 'bg-gray-100 text-neutral-800 rounded-bl-sm'
+                            <div className={`max-w-[85%] ${msg.type === 'user' ? 'text-right' : ''}`}>
+                                <div className={`rounded-2xl px-4 py-3 ${msg.type === 'user'
+                                    ? 'bg-gradient-to-r from-[#C9A96E] to-[#A47E52] text-white rounded-br-md'
+                                    : 'bg-neutral-100 text-neutral-800 rounded-bl-md'
                                     }`}>
                                     <p className="text-sm leading-relaxed">{msg.content}</p>
                                 </div>
 
                                 {/* Action Buttons */}
                                 {msg.actions && msg.type === 'bot' && (
-                                    <div className="mt-2 flex flex-wrap gap-2">
+                                    <div className="mt-3 flex flex-wrap gap-2">
                                         {msg.actions.map((action) => (
                                             <button
                                                 key={action.label}
                                                 onClick={() => handleAction(action.action)}
-                                                className="flex items-center gap-1.5 px-3 py-1.5 text-xs bg-accent/10 hover:bg-accent/20 text-accent border border-accent/30 rounded-full transition-all hover:scale-105"
+                                                className="flex items-center gap-1.5 px-4 py-2 text-xs font-medium bg-gradient-to-r from-[#C9A96E] to-[#B8956A] text-white rounded-full shadow-sm hover:shadow-md hover:scale-105 transition-all"
                                             >
                                                 {action.icon}
                                                 {action.label}
@@ -565,7 +564,7 @@ const Chatbot = () => {
                                             <button
                                                 key={reply}
                                                 onClick={() => handleQuickReply(reply)}
-                                                className="px-3 py-1.5 text-xs bg-secondary/40 hover:bg-secondary/60 border border-border/50 rounded-full transition-all hover:scale-105"
+                                                className="px-3.5 py-2 text-xs font-medium bg-white border border-neutral-200 hover:border-[#C9A96E] hover:bg-[#C9A96E]/5 text-neutral-700 rounded-full transition-all hover:scale-105"
                                             >
                                                 {reply}
                                             </button>
@@ -595,8 +594,8 @@ const Chatbot = () => {
                     <div ref={messagesEndRef} />
                 </div>
 
-                {/* Input - Solid and Clean */}
-                <div className="p-4 border-t border-neutral-100 bg-gray-50">
+                {/* Input Section */}
+                <div className="p-3 border-t border-neutral-100 bg-neutral-50">
                     <form
                         onSubmit={(e) => {
                             e.preventDefault();
@@ -607,20 +606,20 @@ const Chatbot = () => {
                         <Input
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
-                            placeholder="Type a message..."
-                            className="flex-1 bg-white border-neutral-200 focus:border-[#E6B4A6] focus:ring-1 focus:ring-[#E6B4A6] rounded-full px-4 h-11"
+                            placeholder="Type your message..."
+                            className="flex-1 bg-white border-neutral-200 focus:border-[#C9A96E] focus:ring-1 focus:ring-[#C9A96E]/30 rounded-full px-4 h-11 text-sm"
                         />
                         <Button
                             type="submit"
                             size="icon"
                             disabled={!input.trim()}
-                            className="w-11 h-11 rounded-full bg-[#E6B4A6] hover:bg-[#dca596] shadow-sm transition-all"
+                            className="w-11 h-11 rounded-full bg-gradient-to-r from-[#C9A96E] to-[#A47E52] hover:from-[#B8956A] hover:to-[#937245] shadow-md transition-all disabled:opacity-40"
                         >
-                            <Send size={18} className="text-white ml-0.5" />
+                            <Send size={16} className="text-white" />
                         </Button>
                     </form>
-                    <p className="text-[10px] text-neutral-400 text-center mt-3 font-medium tracking-wide">
-                        LUMIÈRE CONCIERGE
+                    <p className="text-[9px] text-neutral-400 text-center mt-2 tracking-widest uppercase">
+                        Lumière Concierge
                     </p>
                 </div>
             </div>

@@ -55,7 +55,7 @@ const TrackOrderModal = ({ isOpen, onClose }: TrackOrderModalProps) => {
 
         setIsLoading(true);
         try {
-            const response = await orderService.getOrder(orderId.trim());
+            const response = await orderService.trackOrder(orderId.trim());
             if (response.success && response.data) {
                 setOrderData(response.data);
             } else {
@@ -227,8 +227,8 @@ const TrackOrderModal = ({ isOpen, onClose }: TrackOrderModalProps) => {
                                                     {/* Icon */}
                                                     <div
                                                         className={`relative z-10 w-9 h-9 rounded-full flex items-center justify-center transition-all ${isCompleted
-                                                                ? "bg-accent text-accent-foreground"
-                                                                : "bg-secondary text-muted-foreground"
+                                                            ? "bg-accent text-accent-foreground"
+                                                            : "bg-secondary text-muted-foreground"
                                                             } ${isCurrent ? "ring-4 ring-accent/20" : ""}`}
                                                     >
                                                         {isCompleted ? (

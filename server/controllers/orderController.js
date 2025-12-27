@@ -2,6 +2,55 @@ import Order from '../models/Order.js';
 import Cart from '../models/Cart.js';
 import Product from '../models/Product.js';
 
+// @desc    Track order publicly (no auth required)
+// @route   GET /api/orders/track/:id
+// @access  Public
+export const trackOrder = async (req, res) => {
+    try {
+        const searchId = req.params.id.trim();
+
+        // Try to find by MongoDB _id, orderNumber, or partial match
+        let order = null;
+
+        // Check if it's a valid MongoDB ObjectId format
+        if (searchId.match(/^[0-9a-fA-F]{24}$/)) {
+            order = await Order.findById(searchId).select('-user -notes');
+        }
+
+        // If not found, try orderNumber
+        if (!order) {
+            order = await Order.findOne({ orderNumber: searchId.toUpperCase() }).select('-user -notes');
+        }
+
+        // If still not found, try partial _id match (last 8 characters)
+        if (!order && searchId.length >= 6) {
+            order = await Order.findOne({
+                $or: [
+                    { _id: { $regex: searchId + '$', $options: 'i' } },
+                    { orderNumber: { $regex: searchId, $options: 'i' } }
+                ]
+            }).select('-user -notes');
+        }
+
+        if (!order) {
+            return res.status(404).json({
+                success: false,
+                message: 'Order not found. Please check the order ID and try again.'
+            });
+        }
+
+        res.json({
+            success: true,
+            data: order
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
 // @desc    Get user orders
 // @route   GET /api/orders
 // @access  Private
@@ -53,6 +102,7 @@ export const getOrder = async (req, res) => {
         });
     }
 };
+
 
 // @desc    Create order
 // @route   POST /api/orders

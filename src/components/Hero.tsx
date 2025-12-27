@@ -1,109 +1,236 @@
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles, Diamond, Star } from "lucide-react";
+import { ArrowRight, Sparkles, Diamond, Star, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import heroBg from "@/assets/hero-bg.png";
 
 const Hero = () => {
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  const slides = [
+    {
+      id: "women",
+      badge: "Women's Collection 2025",
+      title: "Redefine",
+      subtitle: "Your Radiance",
+      description: "Curated luxury for the woman who shines. Each piece tells your story — bold, beautiful, unapologetically you.",
+      ctaLink: "/shop?category=handbags",
+      ctaText: "Shop Women's",
+      bgImage: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1920&q=80",
+      accentFrom: "#b76e79",
+      accentTo: "#d4a574",
+    },
+    {
+      id: "men",
+      badge: "Men's Collection 2025",
+      title: "Define",
+      subtitle: "Your Legacy",
+      description: "Refined elegance for the modern gentleman. Timeless pieces crafted for those who lead with distinction.",
+      ctaLink: "/shop?category=mens-watches",
+      ctaText: "Shop Men's",
+      bgImage: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=1920&q=80",
+      accentFrom: "#d4a574",
+      accentTo: "#c9a96e",
+    },
+  ];
+
+  // Auto-rotate slides
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveSlide((prev) => (prev + 1) % slides.length);
+    }, 8000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const currentSlide = slides[activeSlide];
+
+  const nextSlide = () => setActiveSlide((prev) => (prev + 1) % slides.length);
+  const prevSlide = () => setActiveSlide((prev) => (prev - 1 + slides.length) % slides.length);
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background image with stronger overlay */}
-      <div className="absolute inset-0">
-        <img
-          src={heroBg}
-          alt="Elegant luxury collection"
-          className="w-full h-full object-cover"
-        />
-        {/* Dark overlay for better text readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#1a1a1a]/50 via-[#1a1a1a]/30 to-[#1a1a1a]/60" />
-        {/* Rose gold tint overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#b76e79]/20 via-transparent to-[#d4a574]/20" />
-      </div>
+      {/* Background images with transition */}
+      {slides.map((slide, index) => (
+        <div
+          key={slide.id}
+          className={`absolute inset-0 transition-opacity duration-1000 ${index === activeSlide ? "opacity-100" : "opacity-0"
+            }`}
+        >
+          <img
+            src={slide.bgImage}
+            alt={`${slide.id} collection`}
+            className="w-full h-full object-cover scale-105"
+          />
+          {/* Dark overlay for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#1a1a1a]/60 via-[#1a1a1a]/40 to-[#1a1a1a]/70" />
+          {/* Golden tint overlay */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background: `linear-gradient(135deg, ${slide.accentFrom}20 0%, transparent 50%, ${slide.accentTo}20 100%)`
+            }}
+          />
+        </div>
+      ))}
 
       {/* Animated decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Floating rose gold orbs */}
-        <div className="absolute top-20 left-[10%] w-64 h-64 rounded-full bg-gradient-to-br from-[#b76e79]/30 to-[#d4a574]/20 blur-3xl animate-float" />
-        <div className="absolute top-1/3 right-[5%] w-80 h-80 rounded-full bg-gradient-to-br from-[#d4a574]/25 to-[#b76e79]/15 blur-3xl animate-float animation-delay-200" style={{ animationDuration: '8s' }} />
-        <div className="absolute bottom-20 left-[15%] w-48 h-48 rounded-full bg-gradient-to-br from-[#c9a96e]/20 to-[#b76e79]/15 blur-2xl animate-float animation-delay-400" style={{ animationDuration: '6s' }} />
+        {/* Floating golden orbs */}
+        <div
+          className="absolute top-20 left-[10%] w-64 h-64 rounded-full blur-3xl animate-float"
+          style={{
+            background: `linear-gradient(135deg, ${currentSlide.accentFrom}30 0%, ${currentSlide.accentTo}20 100%)`,
+            transition: 'background 1s ease'
+          }}
+        />
+        <div
+          className="absolute top-1/3 right-[5%] w-80 h-80 rounded-full blur-3xl animate-float animation-delay-200"
+          style={{
+            animationDuration: '8s',
+            background: `linear-gradient(135deg, ${currentSlide.accentTo}25 0%, ${currentSlide.accentFrom}15 100%)`,
+            transition: 'background 1s ease'
+          }}
+        />
+        <div
+          className="absolute bottom-20 left-[15%] w-48 h-48 rounded-full blur-2xl animate-float animation-delay-400"
+          style={{
+            animationDuration: '6s',
+            background: `linear-gradient(135deg, #c9a96e20 0%, ${currentSlide.accentFrom}15 100%)`,
+            transition: 'background 1s ease'
+          }}
+        />
 
         {/* Sparkle particles */}
         <div className="absolute top-1/4 left-1/4 text-[#d4a574]/60 animate-pulse" style={{ animationDuration: '2s' }}>
           <Star size={12} fill="currentColor" />
         </div>
-        <div className="absolute top-1/3 right-1/4 text-[#b76e79]/50 animate-pulse animation-delay-300" style={{ animationDuration: '3s' }}>
+        <div className="absolute top-1/3 right-1/4 text-[#c9a96e]/50 animate-pulse animation-delay-300" style={{ animationDuration: '3s' }}>
           <Diamond size={10} fill="currentColor" />
         </div>
-        <div className="absolute bottom-1/3 left-1/3 text-[#c9a96e]/50 animate-pulse animation-delay-500" style={{ animationDuration: '2.5s' }}>
+        <div className="absolute bottom-1/3 left-1/3 text-[#d4a574]/50 animate-pulse animation-delay-500" style={{ animationDuration: '2.5s' }}>
           <Sparkles size={14} />
-        </div>
-        <div className="absolute top-1/2 right-1/3 text-[#d4a574]/40 animate-pulse" style={{ animationDuration: '4s' }}>
-          <Star size={8} fill="currentColor" />
         </div>
 
         {/* Elegant line decorations */}
-        <div className="absolute top-[15%] left-0 w-32 h-px bg-gradient-to-r from-transparent via-[#b76e79]/40 to-transparent" />
-        <div className="absolute top-[85%] right-0 w-40 h-px bg-gradient-to-l from-transparent via-[#d4a574]/40 to-transparent" />
+        <div className="absolute top-[15%] left-0 w-32 h-px bg-gradient-to-r from-transparent via-[#d4a574]/40 to-transparent" />
+        <div className="absolute top-[85%] right-0 w-40 h-px bg-gradient-to-l from-transparent via-[#c9a96e]/40 to-transparent" />
+      </div>
+
+      {/* Navigation Arrows */}
+      <button
+        onClick={prevSlide}
+        className="absolute left-4 lg:left-8 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 hover:border-[#d4a574]/50 transition-all duration-300 group"
+        aria-label="Previous slide"
+      >
+        <ChevronLeft size={24} className="group-hover:-translate-x-0.5 transition-transform" />
+      </button>
+      <button
+        onClick={nextSlide}
+        className="absolute right-4 lg:right-8 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 hover:border-[#d4a574]/50 transition-all duration-300 group"
+        aria-label="Next slide"
+      >
+        <ChevronRight size={24} className="group-hover:translate-x-0.5 transition-transform" />
+      </button>
+
+      {/* Slide Indicators */}
+      <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3">
+        {slides.map((slide, index) => (
+          <button
+            key={slide.id}
+            onClick={() => setActiveSlide(index)}
+            className={`relative h-1 rounded-full transition-all duration-500 ${index === activeSlide
+              ? "w-12 bg-gradient-to-r from-[#d4a574] to-[#c9a96e]"
+              : "w-6 bg-white/30 hover:bg-white/50"
+              }`}
+            aria-label={`Go to ${slide.id} collection`}
+          >
+            {index === activeSlide && (
+              <span className="absolute inset-0 rounded-full bg-gradient-to-r from-[#d4a574] to-[#c9a96e] animate-pulse opacity-50" />
+            )}
+          </button>
+        ))}
       </div>
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 lg:px-8 text-center">
         <div className="max-w-4xl mx-auto">
           {/* Animated badge */}
-          <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#1a1a1a]/60 backdrop-blur-md border border-[#b76e79]/30 mb-8 animate-fade-up opacity-0 shadow-lg shadow-[#b76e79]/10">
+          <div
+            key={`badge-${activeSlide}`}
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#1a1a1a]/60 backdrop-blur-md border border-[#d4a574]/30 mb-8 animate-fade-up shadow-lg shadow-[#d4a574]/10"
+          >
             <Sparkles size={14} className="text-[#d4a574]" />
             <span className="text-xs uppercase tracking-[0.25em] text-white/90 font-medium">
-              Spring Collection 2025
+              {currentSlide.badge}
             </span>
             <Sparkles size={14} className="text-[#d4a574]" />
           </div>
 
           {/* Main heading with creative typography */}
-          <h1 className="font-display text-5xl md:text-7xl lg:text-8xl xl:text-9xl leading-[0.9] mb-8 animate-fade-up opacity-0 animation-delay-100">
-            <span className="block text-white drop-shadow-lg">Redefine</span>
+          <h1
+            key={`title-${activeSlide}`}
+            className="font-display text-5xl md:text-7xl lg:text-8xl xl:text-9xl leading-[0.9] mb-8 animate-fade-up animation-delay-100"
+          >
+            <span className="block text-white drop-shadow-lg">{currentSlide.title}</span>
             <span className="relative block mt-3">
-              {/* Rose gold gradient text with glow */}
-              <span className="bg-gradient-to-r from-[#b76e79] via-[#d4a574] to-[#c9a96e] bg-clip-text text-transparent italic drop-shadow-lg">
-                Your Radiance
+              {/* Golden gradient text with glow */}
+              <span
+                className="bg-clip-text text-transparent italic drop-shadow-lg"
+                style={{
+                  backgroundImage: `linear-gradient(135deg, ${currentSlide.accentFrom}, ${currentSlide.accentTo}, #c9a96e)`
+                }}
+              >
+                {currentSlide.subtitle}
               </span>
               {/* Underline decoration */}
-              <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-2/3 h-0.5 bg-gradient-to-r from-transparent via-[#d4a574] to-transparent" />
+              <span
+                className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-2/3 h-0.5"
+                style={{
+                  background: `linear-gradient(90deg, transparent, ${currentSlide.accentTo}, transparent)`
+                }}
+              />
             </span>
           </h1>
 
           {/* Subheading with better contrast */}
-          <p className="text-lg lg:text-xl text-white/85 max-w-2xl mx-auto mb-12 animate-fade-up opacity-0 animation-delay-200 leading-relaxed drop-shadow-md">
-            Curated luxury for the woman who shines. Each piece tells your story —
-            bold, beautiful, unapologetically you.
+          <p
+            key={`desc-${activeSlide}`}
+            className="text-lg lg:text-xl text-white/85 max-w-2xl mx-auto mb-12 animate-fade-up animation-delay-200 leading-relaxed drop-shadow-md"
+          >
+            {currentSlide.description}
           </p>
 
           {/* Premium CTA buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-5 animate-fade-up opacity-0 animation-delay-300">
-            <Link to="/shop">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-5 animate-fade-up animation-delay-300">
+            <Link to={currentSlide.ctaLink}>
               <Button
                 size="lg"
-                className="group relative overflow-hidden bg-gradient-to-r from-[#b76e79] to-[#d4a574] hover:from-[#a65d68] hover:to-[#c99463] text-white border-0 shadow-xl shadow-[#b76e79]/30 hover:shadow-[#b76e79]/50 transition-all duration-500 px-10 py-6 text-base font-medium"
+                className="group relative overflow-hidden text-white border-0 shadow-xl transition-all duration-500 px-10 py-6 text-base font-medium"
+                style={{
+                  background: `linear-gradient(135deg, ${currentSlide.accentFrom}, ${currentSlide.accentTo})`,
+                  boxShadow: `0 20px 40px -10px ${currentSlide.accentFrom}50`
+                }}
               >
                 <span className="relative z-10 flex items-center">
-                  Explore Collection
+                  {currentSlide.ctaText}
                   <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform duration-300" size={18} />
                 </span>
                 {/* Shimmer effect */}
                 <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
               </Button>
             </Link>
-            <Link to="/#about">
+            <Link to="/shop">
               <Button
                 variant="outline"
                 size="lg"
                 className="border-2 border-white/40 text-white hover:bg-white/10 hover:border-[#d4a574] backdrop-blur-sm px-10 py-6 text-base font-medium transition-all duration-300"
               >
-                Our Story
+                View All Collections
               </Button>
             </Link>
           </div>
 
           {/* Feature badges with glassmorphism */}
-          <div className="mt-20 flex flex-wrap items-center justify-center gap-4 lg:gap-6 animate-fade-up opacity-0 animation-delay-500">
+          <div className="mt-20 flex flex-wrap items-center justify-center gap-4 lg:gap-6 animate-fade-up animation-delay-500">
             {[
               { label: "Free Shipping", sublabel: "Orders $500+", icon: "✦" },
               { label: "Authentic Luxury", sublabel: "100% Genuine", icon: "◇" },
@@ -111,7 +238,7 @@ const Hero = () => {
             ].map((feature) => (
               <div
                 key={feature.label}
-                className="group flex items-center gap-3 px-5 py-3 rounded-xl bg-[#1a1a1a]/50 backdrop-blur-md border border-white/10 hover:border-[#b76e79]/30 transition-all duration-300 hover:shadow-lg hover:shadow-[#b76e79]/10"
+                className="group flex items-center gap-3 px-5 py-3 rounded-xl bg-[#1a1a1a]/50 backdrop-blur-md border border-white/10 hover:border-[#d4a574]/30 transition-all duration-300 hover:shadow-lg hover:shadow-[#d4a574]/10"
               >
                 <span className="text-[#d4a574] text-lg">{feature.icon}</span>
                 <div className="text-left">
@@ -124,16 +251,10 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* Scroll indicator with rose gold accent */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-fade-in opacity-0 animation-delay-500">
-        <div className="flex flex-col items-center gap-2">
-          <span className="text-xs uppercase tracking-[0.2em] text-white/50">Scroll</span>
-          <div className="w-px h-12 bg-gradient-to-b from-[#d4a574]/60 via-[#b76e79]/30 to-transparent animate-pulse" style={{ animationDuration: '2s' }} />
-        </div>
-      </div>
 
-      {/* Bottom rose gold accent line */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#b76e79]/50 to-transparent" />
+
+      {/* Bottom golden accent line */}
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#d4a574]/50 to-transparent" />
     </section>
   );
 };

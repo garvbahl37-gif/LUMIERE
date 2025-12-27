@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import ProductCard from "@/components/ProductCard";
+import CollectionGrid from "@/components/CollectionGrid";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -55,17 +55,37 @@ const Shop = () => {
     const fetchProducts = async () => {
         setIsLoading(true);
         try {
+            const genderFilter = searchParams.get("gender");
+
             const response = await productService.getProducts({
                 category: selectedCategory || undefined,
                 sort: sortBy as any,
                 search: searchParams.get("search") || undefined,
                 page: pagination.page,
-                limit: 12,
+                limit: 50,
             });
             if (response.success) {
-                setProducts(response.data);
+                let filteredProducts = response.data;
+
+                // Apply gender filter
+                if (genderFilter === "women" && !selectedCategory) {
+                    filteredProducts = response.data.filter(p =>
+                        !p.categoryName.toLowerCase().includes("men's") &&
+                        !p.categoryName.toLowerCase().startsWith("men")
+                    );
+                } else if (genderFilter === "men" && !selectedCategory) {
+                    filteredProducts = response.data.filter(p =>
+                        p.categoryName.toLowerCase().includes("men's") ||
+                        p.categoryName.toLowerCase().startsWith("men")
+                    );
+                }
+
+                setProducts(filteredProducts.slice(0, 12));
                 if (response.pagination) {
-                    setPagination(response.pagination);
+                    setPagination({
+                        ...response.pagination,
+                        total: genderFilter ? filteredProducts.length : response.pagination.total
+                    });
                 }
             }
         } catch (error) {
@@ -246,34 +266,79 @@ const Shop = () => {
                                         </button>
                                     </div>
 
-                                    {/* Categories */}
+                                    {/* Categories - Grouped */}
                                     <div className="space-y-4">
                                         <h4 className="font-display text-lg text-neutral-800">Category</h4>
-                                        <div className="space-y-3">
+                                        <div className="space-y-2">
+                                            {/* All Categories */}
                                             <button
                                                 onClick={() => setSelectedCategory("")}
-                                                className={`group flex items-center justify-between w-full text-left transition-all duration-300 ${!selectedCategory
-                                                    ? 'text-rose-600 font-medium translate-x-1'
-                                                    : 'text-neutral-500 hover:text-neutral-900'
+                                                className={`group flex items-center justify-between w-full text-left py-2 px-3 rounded-lg transition-all duration-300 ${!selectedCategory
+                                                    ? 'bg-[hsl(45_85%_50%/0.1)] text-[hsl(45_85%_45%)] font-medium'
+                                                    : 'text-neutral-600 hover:bg-neutral-50'
                                                     }`}
                                             >
-                                                <span className="text-sm tracking-wide">All Categories</span>
-                                                {!selectedCategory && <span className="w-1.5 h-1.5 bg-rose-500 rounded-full" />}
+                                                <span className="text-sm tracking-wide">All Collections</span>
+                                                {!selectedCategory && <span className="w-1.5 h-1.5 bg-[hsl(45_85%_50%)] rounded-full" />}
                                             </button>
 
-                                            {categories.map((cat) => (
-                                                <button
-                                                    key={cat._id}
-                                                    onClick={() => setSelectedCategory(cat.name)}
-                                                    className={`group flex items-center justify-between w-full text-left transition-all duration-300 ${selectedCategory === cat.name
-                                                        ? 'text-rose-600 font-medium translate-x-1'
-                                                        : 'text-neutral-500 hover:text-neutral-900'
-                                                        }`}
-                                                >
-                                                    <span className="text-sm tracking-wide group-hover:underline decoration-rose-200 underline-offset-4">{cat.name}</span>
-                                                    {selectedCategory === cat.name && <span className="w-1.5 h-1.5 bg-rose-500 rounded-full" />}
-                                                </button>
-                                            ))}
+                                            {/* Women's Collection */}
+                                            {(() => {
+                                                const womenCategories = categories.filter(c =>
+                                                    !c.name.toLowerCase().includes("men's") &&
+                                                    !c.name.toLowerCase().startsWith("men")
+                                                );
+                                                const menCategories = categories.filter(c =>
+                                                    c.name.toLowerCase().includes("men's") ||
+                                                    c.name.toLowerCase().startsWith("men")
+                                                );
+
+                                                return (
+                                                    <>
+                                                        {womenCategories.length > 0 && (
+                                                            <div className="pt-2">
+                                                                <p className="text-[10px] uppercase tracking-[0.2em] text-neutral-400 font-medium mb-2 px-3">Women</p>
+                                                                <div className="space-y-0.5">
+                                                                    {womenCategories.map((cat) => (
+                                                                        <button
+                                                                            key={cat._id}
+                                                                            onClick={() => setSelectedCategory(cat.name)}
+                                                                            className={`group flex items-center justify-between w-full text-left py-2 px-3 rounded-lg transition-all duration-300 ${selectedCategory === cat.name
+                                                                                ? 'bg-[hsl(45_85%_50%/0.1)] text-[hsl(45_85%_45%)] font-medium'
+                                                                                : 'text-neutral-600 hover:bg-neutral-50'
+                                                                                }`}
+                                                                        >
+                                                                            <span className="text-sm tracking-wide">{cat.name}</span>
+                                                                            {selectedCategory === cat.name && <span className="w-1.5 h-1.5 bg-[hsl(45_85%_50%)] rounded-full" />}
+                                                                        </button>
+                                                                    ))}
+                                                                </div>
+                                                            </div>
+                                                        )}
+
+                                                        {menCategories.length > 0 && (
+                                                            <div className="pt-3">
+                                                                <p className="text-[10px] uppercase tracking-[0.2em] text-neutral-400 font-medium mb-2 px-3">Men</p>
+                                                                <div className="space-y-0.5">
+                                                                    {menCategories.map((cat) => (
+                                                                        <button
+                                                                            key={cat._id}
+                                                                            onClick={() => setSelectedCategory(cat.name)}
+                                                                            className={`group flex items-center justify-between w-full text-left py-2 px-3 rounded-lg transition-all duration-300 ${selectedCategory === cat.name
+                                                                                ? 'bg-[hsl(45_85%_50%/0.1)] text-[hsl(45_85%_45%)] font-medium'
+                                                                                : 'text-neutral-600 hover:bg-neutral-50'
+                                                                                }`}
+                                                                        >
+                                                                            <span className="text-sm tracking-wide">{cat.name.replace("Men's ", "")}</span>
+                                                                            {selectedCategory === cat.name && <span className="w-1.5 h-1.5 bg-[hsl(45_85%_50%)] rounded-full" />}
+                                                                        </button>
+                                                                    ))}
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                    </>
+                                                );
+                                            })()}
                                         </div>
                                     </div>
 
@@ -296,44 +361,9 @@ const Shop = () => {
                                 </div>
                             </aside>
 
-                            {/* Products Grid */}
+                            {/* Products Grid - Using CollectionGrid */}
                             <div className="flex-1">
-                                {isLoading ? (
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-12 gap-x-8">
-                                        {[...Array(6)].map((_, i) => (
-                                            <div key={i} className="animate-pulse">
-                                                <div className="aspect-[3/4] bg-neutral-100 mb-5" />
-                                                <div className="h-4 bg-neutral-100 w-3/4 mb-3" />
-                                                <div className="h-4 bg-neutral-100 w-1/4" />
-                                            </div>
-                                        ))}
-                                    </div>
-                                ) : products.length > 0 ? (
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                                        {products.map((product, index) => (
-                                            <ProductCard
-                                                key={product._id}
-                                                id={product._id}
-                                                image={product.image.startsWith('/') ? `http://localhost:5173${product.image}` : product.image}
-                                                name={product.name}
-                                                price={product.price}
-                                                compareAtPrice={product.compareAtPrice}
-                                                category={product.categoryName}
-                                                isNew={product.isNew}
-                                                rating={product.rating}
-                                                numReviews={product.numReviews}
-                                                index={index}
-                                            />
-                                        ))}
-                                    </div>
-                                ) : (
-                                    <div className="text-center py-16">
-                                        <p className="text-muted-foreground text-lg mb-4">No products found</p>
-                                        <Button variant="outline" onClick={clearFilters}>
-                                            Clear filters
-                                        </Button>
-                                    </div>
-                                )}
+                                <CollectionGrid products={products} isLoading={isLoading} />
 
                                 {/* Pagination */}
                                 {pagination.pages > 1 && (

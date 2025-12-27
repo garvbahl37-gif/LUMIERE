@@ -59,6 +59,12 @@ export const orderService = {
         return response.data;
     },
 
+    // Public tracking - no auth required
+    async trackOrder(id: string): Promise<{ success: boolean; data: Order }> {
+        const response = await api.get(`/orders/track/${id}`);
+        return response.data;
+    },
+
     async createOrder(data: CreateOrderData): Promise<{ success: boolean; data: Order }> {
         const response = await api.post('/orders', data);
         return response.data;
