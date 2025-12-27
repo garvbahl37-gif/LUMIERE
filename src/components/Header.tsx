@@ -193,6 +193,16 @@ const Header = () => {
                 </Button>
               )}
 
+              {/* Mobile Search Toggle */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="lg:hidden hover:bg-secondary/50 transition-all"
+                onClick={() => setIsSearchOpen(!isSearchOpen)}
+              >
+                {isSearchOpen ? <X size={20} /> : <Search size={20} />}
+              </Button>
+
               {/* Orders - Desktop (Signed In Only) */}
               <SignedIn>
                 <Link to="/orders" className="hidden lg:block">
@@ -256,10 +266,7 @@ const Header = () => {
         {isMenuOpen && (
           <div className="lg:hidden bg-background border-t border-border animate-in slide-in-from-top-2 duration-300">
             <nav className="container mx-auto px-4 py-6 flex flex-col gap-4">
-              {/* Mobile Search */}
-              <div className="mb-2">
-                <SearchAutocomplete onClose={() => setIsMenuOpen(false)} isMobile />
-              </div>
+
 
               {/* Category Links */}
               <div className="py-2">
@@ -351,6 +358,12 @@ const Header = () => {
                 </SignedOut>
               </div>
             </nav>
+          </div>
+        )}
+        {/* Mobile Search Bar Overlay */}
+        {isSearchOpen && (
+          <div className="lg:hidden border-t border-border bg-background px-4 py-3 animate-in slide-in-from-top-1 duration-200 shadow-md">
+            <SearchAutocomplete onClose={() => setIsSearchOpen(false)} isMobile />
           </div>
         )}
       </header>
