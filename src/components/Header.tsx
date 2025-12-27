@@ -170,7 +170,7 @@ const Header = () => {
             </nav>
 
             {/* Right actions */}
-            <div className="flex items-center gap-1 lg:gap-2">
+            <div className="flex items-center gap-2 lg:gap-6">
               {/* Desktop Search */}
               {isSearchOpen ? (
                 <div className="hidden lg:block relative">
