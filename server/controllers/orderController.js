@@ -197,10 +197,10 @@ export const createOrderDirect = async (req, res) => {
 
             return {
                 product: productId,
-                name: item.name,
-                image: item.image,
-                price: item.price,
-                quantity: item.quantity
+                name: item.name || 'Unknown Product',
+                image: item.image || 'https://via.placeholder.com/150',
+                price: Number(item.price) || 0,
+                quantity: Number(item.quantity) || 1
             };
         });
 
@@ -232,7 +232,11 @@ export const createOrderDirect = async (req, res) => {
             data: order
         });
     } catch (error) {
-        console.error('Create order error:', error);
+        console.error('Create order error details:', error);
+        if (error.name === 'ValidationError') {
+            const messages = Object.values(error.errors).map(val => val.message);
+            console.error('Validation messages:', messages);
+        }
         res.status(500).json({
             success: false,
             message: error.message
