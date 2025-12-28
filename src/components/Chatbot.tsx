@@ -482,8 +482,85 @@ const Chatbot = () => {
 
     const handleQuickReply = (reply: string) => {
         // Remove emoji from reply for processing
-        const cleanReply = reply.replace(/[^\w\s]/gi, '').trim();
-        handleSend(cleanReply || reply);
+        const cleanReply = reply.replace(/[^\w\s]/gi, '').trim().toLowerCase();
+
+        // Direct action handling for specific quick replies
+        switch (cleanReply) {
+            case "shop by category":
+            case "browse products":
+            case "shop now":
+            case "shop all":
+            case "back to shopping":
+            case "continue shopping":
+                navigate("/shop");
+                setIsOpen(false);
+                return;
+            case "new arrivals":
+            case "new":
+            case "latest":
+                navigate("/shop?filter=new");
+                setIsOpen(false);
+                return;
+            case "best sellers":
+            case "popular":
+            case "trending":
+                navigate("/shop?filter=featured");
+                setIsOpen(false);
+                return;
+            case "handbags":
+                navigate("/shop?category=handbags");
+                setIsOpen(false);
+                return;
+            case "jewelry":
+                navigate("/shop?category=jewelry");
+                setIsOpen(false);
+                return;
+            case "shoes":
+                navigate("/shop?category=shoes");
+                setIsOpen(false);
+                return;
+            case "dresses":
+                navigate("/shop?category=dresses");
+                setIsOpen(false);
+                return;
+            case "view my orders":
+                navigate("/orders");
+                setIsOpen(false);
+                return;
+            case "track order":
+            case "track another order":
+                setAwaitingOrderId(true);
+                setMessages(prev => [...prev, {
+                    id: Date.now().toString(),
+                    type: "bot",
+                    content: "📦 Track Your Order\n\nPlease enter your order ID or order number below:",
+                    quickReplies: ["View my orders", "Cancel"]
+                }]);
+                return;
+            case "cancel":
+                setAwaitingOrderId(false);
+                setMessages(prev => [...prev, {
+                    id: Date.now().toString(),
+                    type: "bot",
+                    content: "No problem! How else can I help you?",
+                    quickReplies: ["Shop by category", "New arrivals", "Track order", "Contact support"]
+                }]);
+                return;
+            case "contact support":
+            case "contact us":
+                handleSend("contact");
+                return;
+            case "get styled":
+            case "style advice":
+                handleSend("style advice");
+                return;
+            case "help":
+                handleSend("help");
+                return;
+            default:
+                // For other replies, send as message
+                handleSend(reply);
+        }
     };
 
     const handleProductClick = (productId: string) => {
