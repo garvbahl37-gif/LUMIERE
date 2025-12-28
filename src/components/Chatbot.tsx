@@ -421,7 +421,7 @@ const Chatbot = () => {
                     const botResponse: Message = {
                         id: Date.now().toString(),
                         type: "bot",
-                        content: `${statusEmoji[order.status] || '📋'} **Order Found!**\n\n**Order #:** ${order.orderNumber || order._id.slice(-8).toUpperCase()}\n**Status:** ${order.status.charAt(0).toUpperCase() + order.status.slice(1)}\n**Items:** ${order.items.length} item(s)\n**Total:** $${order.totalPrice.toLocaleString()}\n**Placed:** ${new Date(order.createdAt).toLocaleDateString()}${order.trackingNumber ? `\n**Tracking:** ${order.trackingNumber}` : ''}`,
+                        content: `${statusEmoji[order.status] || '📋'} Order Found!\n\n📋 Order #: ${order.orderNumber || order._id.slice(-8).toUpperCase()}\n📊 Status: ${order.status.charAt(0).toUpperCase() + order.status.slice(1)}\n🛒 Items: ${order.items.length} item(s)\n💰 Total: $${order.totalPrice.toLocaleString()}\n📅 Placed: ${new Date(order.createdAt).toLocaleDateString()}${order.trackingNumber ? `\n🚚 Tracking: ${order.trackingNumber}` : ''}`,
                         quickReplies: ["Track another order", "Contact support", "Back to shopping"]
                     };
                     setIsTyping(false);
