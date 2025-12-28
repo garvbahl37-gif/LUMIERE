@@ -4,6 +4,7 @@ import { MessageCircle, X, Send, Bot, User, ShoppingBag, Sparkles, ArrowRight, H
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { mockProducts } from "@/data/mockProducts";
+import { orderService, Order } from "@/services/orderService";
 
 interface Message {
     id: string;
@@ -32,6 +33,7 @@ const Chatbot = () => {
     const [input, setInput] = useState("");
     const [isTyping, setIsTyping] = useState(false);
     const [context, setContext] = useState<ConversationContext>({ conversationHistory: [] });
+    const [awaitingOrderId, setAwaitingOrderId] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     const scrollToBottom = () => {
@@ -401,6 +403,77 @@ const Chatbot = () => {
         // Variable typing delay based on message complexity
         const typingDelay = 600 + Math.min(messageToSend.length * 20, 800) + Math.random() * 400;
         await new Promise(resolve => setTimeout(resolve, typingDelay));
+
+        // If awaiting order ID, try to track the order
+        if (awaitingOrderId) {
+            setAwaitingOrderId(false);
+            try {
+                const response = await orderService.trackOrder(messageToSend.trim());
+                if (response.success && response.data) {
+                    const order = response.data;
+                    const statusEmoji: Record<string, string> = {
+                        'pending': '⏳',
+                        'processing': '📦',
+                        'shipped': '🚚',
+                        'delivered': '✅',
+                        'cancelled': '❌'
+                    };
+                    const botResponse: Message = {
+                        id: Date.now().toString(),
+                        type: "bot",
+                        content: `${statusEmoji[order.status] || '📋'} **Order Found!**\n\n**Order #:** ${order.orderNumber || order._id.slice(-8).toUpperCase()}\n**Status:** ${order.status.charAt(0).toUpperCase() + order.status.slice(1)}\n**Items:** ${order.items.length} item(s)\n**Total:** $${order.totalPrice.toLocaleString()}\n**Placed:** ${new Date(order.createdAt).toLocaleDateString()}${order.trackingNumber ? `\n**Tracking:** ${order.trackingNumber}` : ''}`,
+                        quickReplies: ["Track another order", "Contact support", "Back to shopping"]
+                    };
+                    setIsTyping(false);
+                    setMessages(prev => [...prev, botResponse]);
+                    return;
+                }
+            } catch (error: any) {
+                const botResponse: Message = {
+                    id: Date.now().toString(),
+                    type: "bot",
+                    content: "❌ Sorry, I couldn't find that order. Please check the order ID and try again.\n\nTip: You can find your order ID in your confirmation email or in 'My Orders' if you're logged in.",
+                    quickReplies: ["Try again", "View my orders", "Contact support"]
+                };
+                setIsTyping(false);
+                setMessages(prev => [...prev, botResponse]);
+                return;
+            }
+        }
+
+        // Check if user wants to track an order (set up the flow)
+        const lowerMessage = messageToSend.toLowerCase();
+        if (lowerMessage.includes("track") && (lowerMessage.includes("order") || lowerMessage.includes("another"))) {
+            setAwaitingOrderId(true);
+            const botResponse: Message = {
+                id: Date.now().toString(),
+                type: "bot",
+                content: "📦 **Track Your Order**\n\nPlease enter your order ID or order number below. You can find it in your confirmation email or on the order success page.",
+                quickReplies: ["View my orders", "I don't have my order ID", "Cancel"]
+            };
+            setIsTyping(false);
+            setMessages(prev => [...prev, botResponse]);
+            return;
+        }
+
+        // Handle "Try again" for order tracking
+        if (lowerMessage === "try again") {
+            setAwaitingOrderId(true);
+            const botResponse: Message = {
+                id: Date.now().toString(),
+                type: "bot",
+                content: "Sure! Please enter your order ID:",
+                quickReplies: ["Cancel", "Contact support"]
+            };
+            setIsTyping(false);
+            setMessages(prev => [...prev, botResponse]);
+            return;
+        }
+
+        // Handle cancel
+        if (lowerMessage === "cancel" && awaitingOrderId) {
+            setAwaitingOrderId(false);
+        }
 
         const botResponse = processMessage(messageToSend);
         setIsTyping(false);
