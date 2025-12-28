@@ -4,6 +4,8 @@ import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 import mongoose from 'mongoose';
 
+import connectDB from '../config/db.js';
+
 // Generate JWT Token (for legacy auth compatibility)
 export const generateToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -13,16 +15,12 @@ export const generateToken = (id) => {
 
 // Middleware to verify Clerk Token and Sync User to MongoDB
 export const protect = async (req, res, next) => {
-    // 1. Verify Token with Clerk
-    // ClerkExpressWithAuth middleware attaches 'auth' object to req
-    // We wrap it in a promise to handle it cleanly here or use it as standard middleware
-
-    // However, since we want to mix verification with User Syncing, let's do it manually using the clerk client
-    // OR easier: assume this middleware is placed AFTER ClerkExpressWithAuth in the route definition?
-    // No, let's make this standalone.
-
-    // Actually, simplest way with ESM:
     try {
+        // Ensure DB is connected
+        if (mongoose.connection.readyState !== 1) {
+            await connectDB();
+        }
+
         // Check for Bearer token
         if (!req.headers.authorization || !req.headers.authorization.startsWith('Bearer ')) {
             console.log('Auth Failed: No token provided');
