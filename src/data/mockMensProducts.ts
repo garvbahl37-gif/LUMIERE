@@ -44,52 +44,52 @@ const watchesImages = [
     "https://images.unsplash.com/photo-1612817159949-195b6eb9e31a?w=800",
 ];
 
-// Men's Bags Images
+// Men's Bags Images - Luxury Briefcases & Leather Bags
 const mensBagsImages = [
-    "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800",
-    "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=800",
-    "https://images.unsplash.com/photo-1622560480605-d83c853bc5c3?w=800",
-    "https://images.unsplash.com/photo-1491637639811-60e2756cc1c7?w=800",
-    "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=800",
-    "https://images.unsplash.com/photo-1585916420730-d7f95e942d43?w=800",
-    "https://images.unsplash.com/photo-1473188588951-666fce8e7c68?w=800",
-    "https://images.unsplash.com/photo-1547949003-9789c0b62c0c?w=800",
-    "https://images.unsplash.com/photo-1548365328-8c6db3220e4c?w=800",
-    "https://images.unsplash.com/photo-1592150621744-aca64f48394a?w=800",
-    "https://images.unsplash.com/photo-1578237493287-8d4d2b03591a?w=800",
-    "https://images.unsplash.com/photo-1553062407-98eeb64c6a45?w=800",
-    "https://images.unsplash.com/photo-1575844264771-892081089af5?w=800",
-    "https://images.unsplash.com/photo-1581605405669-fcdf81165afa?w=800",
-    "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?w=800",
-    "https://images.unsplash.com/photo-1622560480654-d83c853bc5c4?w=800",
-    "https://images.unsplash.com/photo-1576192520246-3e4b5ef8ff66?w=800",
-    "https://images.unsplash.com/photo-1590739225287-bd31519780c3?w=800",
-    "https://images.unsplash.com/photo-1605733160314-4fc7dac4bb7b?w=800",
-    "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=800",
+    "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=800", // Leather briefcase
+    "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800", // Messenger bag
+    "https://images.unsplash.com/photo-1622560480605-d83c853bc5c3?w=800", // Laptop portfolio
+    "https://images.unsplash.com/photo-1585916420730-d7f95e942d43?w=800", // Weekend duffel
+    "https://images.unsplash.com/photo-1553062407-98eeb64c6a45?w=800", // Leather backpack
+    "https://images.unsplash.com/photo-1491637639811-60e2756cc1c7?w=800", // Document case
+    "https://images.unsplash.com/photo-1565619632666-377ff99247e0?w=800", // Travel carry-on
+    "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=800", // Crossbody satchel
+    "https://images.unsplash.com/photo-1576192520246-3e4b5ef8ff66?w=800", // Slim folio
+    "https://images.unsplash.com/photo-1592850628086-1ceda4b1dd56?w=800", // Overnight bag
+    "https://images.unsplash.com/photo-1547949003-9789c0b62c0c?w=800", // Executive attache
+    "https://images.unsplash.com/photo-1575844264771-892081089af5?w=800", // Convertible tote
+    "https://images.unsplash.com/photo-1578237493287-8d4d2b03591a?w=800", // Tech backpack
+    "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?w=800", // Garment bag
+    "https://images.unsplash.com/photo-1590739225287-bd31519780c3?w=800", // Duffle weekender
+    "https://images.unsplash.com/photo-1605733160314-4fc7dac4bb7b?w=800", // Shoulder messenger
+    "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=800", // Leather holdall
+    "https://images.unsplash.com/photo-1473188588951-666fce8e7c68?w=800", // Business bag
+    "https://images.unsplash.com/photo-1592150621744-aca64f48394a?w=800", // Vintage satchel
+    "https://images.unsplash.com/photo-1581605405669-fcdf81165afa?w=800", // Premium carryall
 ];
 
-// Men's Shoes Images
+// Men's Shoes Images - Luxury Dress Shoes
 const mensShoesImages = [
-    "https://images.unsplash.com/photo-1449505278894-297fdb3edbc1?w=800",
-    "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=800",
-    "https://images.unsplash.com/photo-1605812860427-4024433a70fd?w=800",
-    "https://images.unsplash.com/photo-1600269452121-4f2416e55c28?w=800",
-    "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800",
-    "https://images.unsplash.com/photo-1491553895911-0055uj8a3bf3?w=800",
-    "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?w=800",
-    "https://images.unsplash.com/photo-1551107696-a4b0c5a0d9a2?w=800",
-    "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=800",
-    "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=800",
-    "https://images.unsplash.com/photo-1605348532760-6753d2c43329?w=800",
-    "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=800",
-    "https://images.unsplash.com/photo-1520219306100-ec61f9697050?w=800",
-    "https://images.unsplash.com/photo-1607522370275-f14206abe5d3?w=800",
-    "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=800",
-    "https://images.unsplash.com/photo-1587563871167-1ee9c731aefb?w=800",
-    "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800",
-    "https://images.unsplash.com/photo-1614252369475-531eba835eb1?w=800",
-    "https://images.unsplash.com/photo-1491553895911-0055uj8a3bf4?w=800",
-    "https://images.unsplash.com/photo-1582897085656-c636d006a246?w=800",
+    "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=800", // Oxford dress shoes
+    "https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=800", // Derby brogues
+    "https://images.unsplash.com/photo-1626379953822-baec19c3accd?w=800", // Leather loafers
+    "https://images.unsplash.com/photo-1638247025967-b4e38f787b76?w=800", // Chelsea boots
+    "https://images.unsplash.com/photo-1603808033192-082d6919d3e1?w=800", // Monk strap
+    "https://images.unsplash.com/photo-1531310197839-ccf54634509e?w=800", // Penny loafers
+    "https://images.unsplash.com/photo-1605812860427-4024433a70fd?w=800", // Wingtip oxfords
+    "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?w=800", // Suede loafers
+    "https://images.unsplash.com/photo-1520639888713-7851133b1ed0?w=800", // Dress boots
+    "https://images.unsplash.com/photo-1611510338559-2f463335092c?w=800", // Cap toe oxfords
+    "https://images.unsplash.com/photo-1560343090-f0409e92791a?w=800", // Tassel loafers
+    "https://images.unsplash.com/photo-1615886753866-79396abc446f?w=800", // Chukka boots
+    "https://images.unsplash.com/photo-1449505278894-297fdb3edbc1?w=800", // Whole cut
+    "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=800", // Double monk
+    "https://images.unsplash.com/photo-1582897085656-c636d006a246?w=800", // Venetian loafers
+    "https://images.unsplash.com/photo-1542838132-92c53300491e?w=800", // Jodhpur boots
+    "https://images.unsplash.com/photo-1600269452121-4f2416e55c28?w=800", // Bit loafers
+    "https://images.unsplash.com/photo-1598387993281-cecf8b71a8f8?w=800", // Longwing brogues
+    "https://images.unsplash.com/photo-1580480055273-228ff5388ef8?w=800", // Side zip boots
+    "https://images.unsplash.com/photo-1617952385804-7b326fa42766?w=800", // Opera pumps
 ];
 
 // Men's Suits Images
