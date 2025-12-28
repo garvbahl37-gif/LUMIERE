@@ -49,13 +49,13 @@ export const protect = async (req, res, next) => {
         const clerkId = claims.sub;
         console.log('Token Verified. Clerk ID:', clerkId);
 
-        // Bypassing Mongoose findOne due to potential crash/validation issue
-        console.log('Searching MongoDB (Native) for user...');
+        // Bypassing native driver due to connection buffering issues in serverless
+        console.log('Searching MongoDB (Mongoose) for user...');
         let userBuffer = null;
         try {
-            userBuffer = await mongoose.connection.db.collection('users').findOne({ clerkId });
+            userBuffer = await User.findOne({ clerkId });
         } catch (dbError) {
-            console.error('Native DB Find Error:', dbError);
+            console.error('Mongoose Find Error:', dbError);
         }
 
         let user = userBuffer;
