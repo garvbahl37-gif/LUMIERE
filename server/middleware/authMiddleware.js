@@ -2,6 +2,7 @@
 import { ClerkExpressWithAuth } from '@clerk/clerk-sdk-node';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
+import mongoose from 'mongoose';
 
 // Generate JWT Token (for legacy auth compatibility)
 export const generateToken = (id) => {
