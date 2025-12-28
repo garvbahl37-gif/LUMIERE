@@ -59,7 +59,7 @@ const About = () => {
                         <div className="aspect-[3/4] overflow-hidden rounded-sm shadow-2xl relative z-10">
                             <div className="absolute inset-0 bg-rose-900/10 mix-blend-multiply transition-opacity duration-700 group-hover:opacity-0" />
                             <img
-                                src="https://images.unsplash.com/photo-1537832816519-689ad163238b?q=80&w=2059&auto=format&fit=crop"
+                                src="https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?q=80&w=2000&auto=format&fit=crop"
                                 alt="Lumière Atelier Craftsmanship"
                                 className="w-full h-full object-cover transform transition-transform duration-[1.5s] group-hover:scale-105"
                             />

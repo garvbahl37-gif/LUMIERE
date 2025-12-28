@@ -22,122 +22,122 @@ export interface MockProduct {
 
 // Men's Watches Images
 const watchesImages = [
-    "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=800",
-    "https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=800",
-    "https://images.unsplash.com/photo-1533139502658-0198f920d8e8?w=800",
-    "https://images.unsplash.com/photo-1548171915-e79a380a2a4b?w=800",
-    "https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?w=800",
-    "https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?w=800",
-    "https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?w=800",
-    "https://images.unsplash.com/photo-1587836374828-4dbafa94cf0e?w=800",
-    "https://images.unsplash.com/photo-1539874754764-5a96559165b0?w=800",
-    "https://images.unsplash.com/photo-1547996160-81dfa63595aa?w=800",
-    "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=800",
-    "https://images.unsplash.com/photo-1509048191080-d2984bad6ae5?w=800",
-    "https://images.unsplash.com/photo-1526045431048-f857369baa09?w=800",
-    "https://images.unsplash.com/photo-1560343090-f0409e92791a?w=800",
-    "https://images.unsplash.com/photo-1618220179428-22790b461013?w=800",
-    "https://images.unsplash.com/photo-1434056886845-dbd065f85ea5?w=800",
-    "https://images.unsplash.com/photo-1495704907664-81f74a7efd9b?w=800",
-    "https://images.unsplash.com/photo-1559563362-c667ba5f6152?w=800",
-    "https://images.unsplash.com/photo-1604242692760-2f7b0c26856d?w=800",
-    "https://images.unsplash.com/photo-1612817159949-195b6eb9e31a?w=800",
+    "https://timehouse.s3.me-central-1.amazonaws.com/uae-images/27TlkvyF91t.jpg",
+    "https://dynamic.zacdn.com/3_Mj36s7JjiwR_P1O4y8ohsDWtg=/filters:quality(70):format(webp)/https://static-my.zacdn.com/p/orient-1794-9955142-1.jpg",
+    "https://embed.widencdn.net/img/citizenwatch/8usvywgo7q/1000px/Promaster 1000M Professional Diver.png?u=41zuoe",
+    "https://i.pinimg.com/736x/10/99/2c/10992c15101a98c91c816d380072f753.jpg",
+    "https://www.my-watchsite.com/15684-large_default/ocean-sport-chronograph.jpg",
+    "https://i.pinimg.com/originals/d5/73/71/d5737151a68a2ec6eb3ea2fdde81a685.jpg",
+    "https://m.media-amazon.com/images/I/71oUf9HimdL._AC_SL1500_.jpg",
+    "https://i5.walmartimages.com/seo/OLEVS-Men-s-Watches-Chronograph-Multifunction-Sport-Silicone-Luxury-Diamond-Moon-Phase-Quartz-Male-Watch-Waterproof-Wrist-Watch_4c329867-a789-417d-81ba-df807e9a4c5f.ea7eb6088d346d0e80c2c0b76f54bb41.jpeg",
+    "https://mywatchllc.com/cdn/shop/files/IMG_9287_9929a6a0-e2a0-4b64-9a3f-a74e977abbc1.jpg?v=1755785803",
+    "https://i.pinimg.com/736x/70/93/13/709313120a6d1b1abc29d9b50dce631e.jpg",
+    "https://worldofluxuryus.com/cdn/shop/files/2_5217aa81-c5b9-42d4-bb56-c5e6eb5cf2cb.jpg?v=1758714761",
+    "https://m.media-amazon.com/images/I/61NpvvWfFvL._AC_UY1000_.jpg",
+    "https://www.jurawatches.co.uk/cdn/shop/files/TAGHeuerWatchFormula1AutomaticChronographxOracleRedBullRacingCBZ2080.FT80914.png?v=1737538424",
+    "https://i.pinimg.com/736x/a0/eb/1b/a0eb1b876b33024c494690a2506e56dc.jpg",
+    "https://m.media-amazon.com/images/I/71txlyhbZcL._AC_SL1500_.jpg",
+    "https://m.media-amazon.com/images/I/81M7baAjK5L._AC_.jpg",
+    "https://down-my.img.susercontent.com/file/cn-11134208-7ras8-m4s9d2snzh87a6",
+    "https://m.media-amazon.com/images/I/71V-7kkDK1S._AC_UL1300_.jpg",
+    "https://www.ablogtowatch.com/wp-content/uploads/2016/03/Tudor-Heritage-Black-Bay-Bronze-79250BM-5.jpg",
+    "https://watchranker.com/wp-content/uploads/2020/11/Blancpain.jpg",
 ];
 
-// Men's Bags Images - Luxury Briefcases & Leather Bags
+// Men's Bags Images
 const mensBagsImages = [
-    "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=800", // Leather briefcase
-    "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800", // Messenger bag
-    "https://images.unsplash.com/photo-1622560480605-d83c853bc5c3?w=800", // Laptop portfolio
-    "https://images.unsplash.com/photo-1585916420730-d7f95e942d43?w=800", // Weekend duffel
-    "https://images.unsplash.com/photo-1553062407-98eeb64c6a45?w=800", // Leather backpack
-    "https://images.unsplash.com/photo-1491637639811-60e2756cc1c7?w=800", // Document case
-    "https://images.unsplash.com/photo-1565619632666-377ff99247e0?w=800", // Travel carry-on
-    "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=800", // Crossbody satchel
-    "https://images.unsplash.com/photo-1576192520246-3e4b5ef8ff66?w=800", // Slim folio
-    "https://images.unsplash.com/photo-1592850628086-1ceda4b1dd56?w=800", // Overnight bag
-    "https://images.unsplash.com/photo-1547949003-9789c0b62c0c?w=800", // Executive attache
-    "https://images.unsplash.com/photo-1575844264771-892081089af5?w=800", // Convertible tote
-    "https://images.unsplash.com/photo-1578237493287-8d4d2b03591a?w=800", // Tech backpack
-    "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?w=800", // Garment bag
-    "https://images.unsplash.com/photo-1590739225287-bd31519780c3?w=800", // Duffle weekender
-    "https://images.unsplash.com/photo-1605733160314-4fc7dac4bb7b?w=800", // Shoulder messenger
-    "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=800", // Leather holdall
-    "https://images.unsplash.com/photo-1473188588951-666fce8e7c68?w=800", // Business bag
-    "https://images.unsplash.com/photo-1592150621744-aca64f48394a?w=800", // Vintage satchel
-    "https://images.unsplash.com/photo-1581605405669-fcdf81165afa?w=800", // Premium carryall
+    "https://i.etsystatic.com/8115148/r/il/03d916/1741333308/il_fullxfull.1741333308_tfr4.jpg",
+    "https://i.pinimg.com/originals/ea/ad/43/eaad437f338db02cc1fe2ed1d34d5660.png",
+    "https://www.hugme.fashion/image/cache/catalog/Leather Bag/LB57/amb74_3-800x1019.jpg",
+    "https://mensflair.com/wp-content/uploads/2022/12/WeekenderBagsEdit5.jpg",
+    "https://i.etsystatic.com/10661967/r/il/9a0256/4244557858/il_fullxfull.4244557858_240p.jpg",
+    "https://cdna.lystit.com/400/500/tr/photos/harrods/ba3608a6/dunhill-black-Leather-Cadogan-Document-Case.jpeg",
+    "https://m.media-amazon.com/images/I/71O5XNpebbL._AC_SL1500_.jpg",
+    "https://cdna.lystit.com/photos/matchesfashion/14af3055/gucci-black-Gg-Supreme-Leather-Cross-body-Bag.jpeg",
+    "https://assets.paulsmith.com/paul-smith-products/f_jpg,q_auto,w_1228/v1746718275/STILL/M1A/M1A-8158-TLEPIP-62-0/M1A-8158-TLEPIP-62-0_70",
+    "https://i.pinimg.com/originals/26/fd/c1/26fdc1f5f94da7456447125c6091d71a.jpg",
+    "https://m.media-amazon.com/images/I/51cYl00KmnL._AC_SL1500_.jpg",
+    "https://i.pinimg.com/originals/e0/3a/57/e03a573573a7e46e66ab55e656c8d314.jpg",
+    "https://i.pinimg.com/originals/a3/27/e2/a327e289e98b889a2245b0a66b68a316.jpg",
+    "https://i.pinimg.com/originals/fd/59/22/fd5922da47781374ef52af1258e917ff.png",
+    "https://i.etsystatic.com/10448437/r/il/6cc240/1057940132/il_570xN.1057940132_f4mx.jpg",
+    "https://i.etsystatic.com/18299285/r/il/910dac/3636133059/il_fullxfull.3636133059_grbg.jpg",
+    "https://img.shopstyle-cdn.com/sim/c6/e6/c6e6e795234e9b61ce1f5ec446e9d6d5_best/lakeland-leather-discoverer-large-leather-holdall.jpg",
+    "https://i.pinimg.com/originals/43/aa/f2/43aaf20777251db18382306e2b9fb98b.jpg",
+    "https://i.pinimg.com/originals/d6/65/76/d66576fdfd366ce1da50b366254126a0.jpg",
+    "https://media.bergdorfgoodman.com/images/f_auto,q_auto:low,ar_5:7,c_fill,dpr_2.0,w_720/01/2832691_100106_a/giorgio-armani-mens-deer-leather-carryall-",
 ];
 
-// Men's Shoes Images - Luxury Dress Shoes
+// Men's Shoes Images
 const mensShoesImages = [
-    "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=800", // Oxford dress shoes
-    "https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=800", // Derby brogues
-    "https://images.unsplash.com/photo-1626379953822-baec19c3accd?w=800", // Leather loafers
-    "https://images.unsplash.com/photo-1638247025967-b4e38f787b76?w=800", // Chelsea boots
-    "https://images.unsplash.com/photo-1603808033192-082d6919d3e1?w=800", // Monk strap
-    "https://images.unsplash.com/photo-1531310197839-ccf54634509e?w=800", // Penny loafers
-    "https://images.unsplash.com/photo-1605812860427-4024433a70fd?w=800", // Wingtip oxfords
-    "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?w=800", // Suede loafers
-    "https://images.unsplash.com/photo-1520639888713-7851133b1ed0?w=800", // Dress boots
-    "https://images.unsplash.com/photo-1611510338559-2f463335092c?w=800", // Cap toe oxfords
-    "https://images.unsplash.com/photo-1560343090-f0409e92791a?w=800", // Tassel loafers
-    "https://images.unsplash.com/photo-1615886753866-79396abc446f?w=800", // Chukka boots
-    "https://images.unsplash.com/photo-1449505278894-297fdb3edbc1?w=800", // Whole cut
-    "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=800", // Double monk
-    "https://images.unsplash.com/photo-1582897085656-c636d006a246?w=800", // Venetian loafers
-    "https://images.unsplash.com/photo-1542838132-92c53300491e?w=800", // Jodhpur boots
-    "https://images.unsplash.com/photo-1600269452121-4f2416e55c28?w=800", // Bit loafers
-    "https://images.unsplash.com/photo-1598387993281-cecf8b71a8f8?w=800", // Longwing brogues
-    "https://images.unsplash.com/photo-1580480055273-228ff5388ef8?w=800", // Side zip boots
-    "https://images.unsplash.com/photo-1617952385804-7b326fa42766?w=800", // Opera pumps
+    "https://i.pinimg.com/originals/0e/5a/a2/0e5aa290eb6c90bcc3c7b734bf022660.jpg",
+    "https://www.secretsales.com/cdn-cgi/image/width=640,height=800,fit=contain,format=auto/https://media.secretsales.com/catalog/product/b/5/b5299ed6ccc64e6497be06f9b081cf14.jpg",
+    "https://cdna.lystit.com/photos/lanecrawford/3f00fd7b/allen-edmonds--spring-Street-Tassel-Leather-Loafers.jpeg",
+    "https://assets.myntassets.com/h_200,w_200,c_fill,g_auto/h_1440,q_100,w_1080/v1/assets/images/14082248/2022/3/15/5db67ddc-9415-4dc3-a970-6c3636b138391647327773096SaintGMenBlackSolidLeatherFormalChelseaBoots1.jpg",
+    "https://i0.wp.com/sveltemag.com/wp-content/uploads/2022/01/black-monk-shoes.jpg?resize=564%2C705&is-pending-load=1#038;ssl=1",
+    "https://cdn.luxe.digital/media/2020/03/04095155/loafers-best-men-shoes-luxe-digital.jpg",
+    "https://i.pinimg.com/originals/44/42/de/4442deed26a8c9d86f2d485be3a38e41.jpg",
+    "https://i.pinimg.com/originals/1b/69/43/1b6943d513943a0412f09e0e0d366399.jpg",
+    "https://i.pinimg.com/originals/5d/28/0a/5d280aa325d215a2a76828fe54c76f09.jpg",
+    "https://i.pinimg.com/originals/92/d5/a6/92d5a61c0489b6469162246342274c41.jpg",
+    "https://cdn.suitsupply.com/image/upload/b_rgb:efefef,c_fill,w_2600,h_3597/b_rgb:efefef,c_pad,dpr_1,w_850,h_1176,f_auto,q_auto,fl_progressive/products/Shoes/default/FW1331_35.jpg",
+    "https://i.etsystatic.com/39126012/r/il/e45bd6/4545804644/il_fullxfull.4545804644_jn4r.jpg",
+    "https://i.pinimg.com/originals/5c/67/7b/5c677b1ce69bc782efa4b1221332a812.jpg",
+    "https://www.xposedlondon.com/cdn/shop/files/MAIN_310415e1-3faf-4ca5-9d9e-68bca6f0243e.jpg?v=1718720779",
+    "https://media.bergdorfgoodman.com/f_auto,q_auto:low,ar_5:7,c_fill,dpr_2.0,w_720/01/bg_4669849_100134_z",
+    "https://i.pinimg.com/originals/30/e1/aa/30e1aa23dd749fc1c3720fc2448cb922.jpg",
+    "https://brabions.com/cdn/shop/products/image_12c9e16a-60dc-4b06-970e-1220a6a111d6.jpg?v=1594218652&width=1100",
+    "https://www.santimon.com/cdn/shop/files/A4_1ffb60b5-5ad8-4dd0-8103-15aab61475f7.jpg?v=1701156777",
+    "https://assets.digitalcontent.marksandspencer.app/images/w_1024,q_auto,f_auto/MS_10_T83_8927B_Y0_X_EC_0/Leather-Side-Zip-Chelsea-Boots",
+    "https://i.ebayimg.com/images/g/sM4AAOSw2C1juWZq/s-l1600.jpg",
 ];
 
 // Men's Suits Images
 const suitImages = [
-    "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800",
-    "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800",
-    "https://images.unsplash.com/photo-1593030761757-71fae45fa0e7?w=800",
-    "https://images.unsplash.com/photo-1594938298603-c8148c4dae36?w=800",
-    "https://images.unsplash.com/photo-1617137968427-85924c800a22?w=800",
-    "https://images.unsplash.com/photo-1598808503746-f34c53b9323e?w=800",
-    "https://images.unsplash.com/photo-1580657018950-c7f7d6a6d990?w=800",
-    "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=800",
-    "https://images.unsplash.com/photo-1619084709681-a8f4edf6d7f8?w=800",
-    "https://images.unsplash.com/photo-1608030609295-a2eb7cb09e98?w=800",
-    "https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?w=800",
-    "https://images.unsplash.com/photo-1592878940526-0214b0f374f6?w=800",
-    "https://images.unsplash.com/photo-1509281373149-e957c6296406?w=800",
-    "https://images.unsplash.com/photo-1592878849122-facb97520f9e?w=800",
-    "https://images.unsplash.com/photo-1581791538302-03537b9c97bf?w=800",
-    "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=800",
-    "https://images.unsplash.com/photo-1600684388091-5d35e7c0aa30?w=800",
-    "https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=800",
-    "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=800",
-    "https://images.unsplash.com/photo-1611312449412-6cefac5dc3e4?w=800",
+    "https://i.pinimg.com/originals/cd/26/ef/cd26ef86c48ac24bfc9131682286878e.jpg",
+    "https://nemersaade.com/wp-content/uploads/2022/11/DSC3843-scaled.jpg",
+    "https://i.pinimg.com/originals/78/be/c0/78bec05f66cbbf8a157eda312d99c9ac.jpg",
+    "https://content.moss.co.uk/images/extraextralarge/966916009_02.jpg",
+    "https://i.pinimg.com/originals/b5/d0/ba/b5d0ba0fb145be0f3a90ba846c7f53e2.jpg",
+    "https://i.etsystatic.com/37908468/r/il/b2b404/4377755645/il_fullxfull.4377755645_mt1r.jpg",
+    "https://handcmediastorage.blob.core.windows.net/productimages/CO/COCLE316-B52-174695-1400px-1820px.jpg",
+    "https://content.moss.co.uk/images/extraextralarge/967009422_02.jpg",
+    "https://menstuxedousa.com/cdn/shop/files/TailoredFit5.jpg?v=1716462081",
+    "https://assets.paulsmith.com/paul-smith-products/f_jpg,q_auto,w_828/v1697545495/MODEL/ECOM/M1R/M1R-1841P-L01346-79/M1R-1841P-L01346-79_11",
+    "https://media.bergdorfgoodman.com/f_auto,q_auto:low,ar_5:7,c_fill,dpr_2.0,w_720/01/bg_4791633_100106_a",
+    "https://i.pinimg.com/originals/a8/e3/f8/a8e3f80e053265fafc091e12ce3da170.jpg",
+    "https://i.pinimg.com/originals/fd/48/24/fd48248c8add51cfc018adda8e43aff6.jpg",
+    "https://universaltailor.com/wp-content/uploads/2018/08/how-to-wear-charcoal-grey-suit-for-business.jpg",
+    "https://i.pinimg.com/originals/99/6c/a1/996ca171147beb0866090197418e44f5.jpg",
+    "https://stylesatlife.com/wp-content/uploads/2019/10/Designer-blazers-for-wedding-men.jpg",
+    "https://dtcralphlauren.scene7.com/is/image/PoloGSI/s7-1443679_alternate10?$rl_4x5_pdp$",
+    "https://i.pinimg.com/originals/e1/ea/be/e1eabe852731c71c9f44a24adb575656.jpg",
+    "https://i.pinimg.com/originals/f8/7b/98/f87b9861721cd67b996d6bad5f5638c3.jpg",
+    "https://image.menswearhouse.com/is/image/TMW/TMW_3YC2_14_NAUTICA_2_PIECE_SUITS_BLUEPOSTMAN_MAIN?imPolicy=pgp-sm",
 ];
 
 // Men's Accessories Images
 const mensAccessoriesImages = [
-    "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800",
-    "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=800",
-    "https://images.unsplash.com/photo-1473188588951-666fce8e7c68?w=800",
-    "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?w=800",
-    "https://images.unsplash.com/photo-1612817159949-195b6eb9e31a?w=800",
-    "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=800",
-    "https://images.unsplash.com/photo-1624378439575-d8705ad7ae81?w=800",
-    "https://images.unsplash.com/photo-1556306535-0f09a537f0a3?w=800",
-    "https://images.unsplash.com/photo-1627123424574-724758594e93?w=800",
-    "https://images.unsplash.com/photo-1590739766704-8c5aba847e57?w=800",
-    "https://images.unsplash.com/photo-1579389083175-247ef703006a?w=800",
-    "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=800",
-    "https://images.unsplash.com/photo-1594534475808-b18fc33b045e?w=800",
-    "https://images.unsplash.com/photo-1618354691792-d1d42acfd860?w=800",
-    "https://images.unsplash.com/photo-1558171813-4c088753af8f?w=800",
-    "https://images.unsplash.com/photo-1625591342274-013866180d5b?w=800",
-    "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=800",
-    "https://images.unsplash.com/photo-1556684087-8e0b0d1edf43?w=800",
-    "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800",
-    "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=800",
+    "https://i.pinimg.com/736x/e0/bf/44/e0bf447e38c488ca98c3cf1db99e5c6d--designer-ties-neck-ties.jpg",
+    "https://i.etsystatic.com/42123138/r/il/0fc956/6130426131/il_fullxfull.6130426131_4ced.jpg",
+    "https://media.neimanmarcus.com/f_auto,q_auto/01/nm_4488750_100109_m",
+    "https://www.faribasoltani.com/wp-content/uploads/2018/07/Navy-Geometric-Silk-Pocket-Square-1-700x905.jpg",
+    "https://static.toiimg.com/photo/109371406/109371406.jpg",
+    "https://image.menswearhouse.com/is/image/TMW/TMW_837B_25_PRONTO_UOMO_TIE_BARS_TIE_CHAINS_SILVER_MAIN",
+    "https://i.etsystatic.com/54717487/r/il/72fbde/6459088557/il_1080xN.6459088557_kv4g.jpg",
+    "https://i.pinimg.com/originals/a3/71/51/a37151d924dc909fbc5e0c3911237637.png",
+    "https://i.pinimg.com/originals/36/51/cd/3651cd311aa591c564a86573e21ebd9d.jpg",
+    "https://www.aeuluxury.com/wp-content/uploads/2024/01/975804_BLAC_1__52902.1700140167.jpg",
+    "https://www.tommyowenseyewear.com/cdn/shop/products/collarstays-male-model-collar-tommyowens_1800x.jpg?v=1646693525",
+    "https://chiqueandsleekin.com/wp-content/uploads/2020/06/il_fullxfull.1948429017_3vgz-scaled-1.jpg",
+    "https://i.pinimg.com/originals/2f/d9/86/2fd9866a2fd74c5685bcbe5efa19212f.jpg",
+    "https://images.nexusapp.co/assets/83/63/8f/55466066.jpg",
+    "https://i.pinimg.com/736x/f6/67/64/f667649f10c91bc3c8d5f65c173b4107.jpg",
+    "https://media.neimanmarcus.com/f_auto,q_auto/01/nm_4335557_100134_m",
+    "https://longvadon.com/cdn/shop/files/closeup_apple_watch_mens_leather_v1logo_4x5_a82e1635-67f3-4678-aa65-a77a1c2ba200.jpg?v=1744970036",
+    "https://i.pinimg.com/originals/27/46/c4/2746c4e006f2a01a338cd43eda39ec5e.jpg",
+    "https://product-images.therealreal.com/LOU117012_1_enlarged.jpg",
+    "https://i.etsystatic.com/46290522/r/il/bb7d6d/5800104386/il_1080xN.5800104386_amio.jpg",
 ];
 
 // Product Names
