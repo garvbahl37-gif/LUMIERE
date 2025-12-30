@@ -42,8 +42,8 @@ const Header = () => {
     { name: "Home", href: "/", icon: <Home size={14} /> },
     { name: "Women", href: "/shop?gender=women", hasDropdown: true, dropdownType: "women" },
     { name: "Men", href: "/shop?gender=men", hasDropdown: true, dropdownType: "men" },
-    { name: "New Arrivals", href: "/shop?isNew=true", icon: <Sparkles size={14} /> },
-    { name: "Sale", href: "/shop?sale=true", icon: <Tag size={14} />, highlight: true },
+    { name: "New Arrivals", href: "/shop?isNew=true" },
+    { name: "Sale", href: "/shop?sale=true", highlight: true },
     { name: "About", href: "/#about", isHash: true },
   ];
 
@@ -197,7 +197,6 @@ const Header = () => {
                 onClick={() => setIsTrackOrderOpen(true)}
                 className="flex items-center gap-1.5 font-display font-semibold text-sm tracking-widest uppercase text-foreground/80 hover:text-accent transition-all cursor-pointer hover:-translate-y-0.5"
               >
-                <Truck size={14} />
                 Track Order
               </button>
             </nav>

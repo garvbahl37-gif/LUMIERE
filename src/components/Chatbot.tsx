@@ -614,10 +614,10 @@ const Chatbot = () => {
                             <Sparkles size={20} className="text-white" />
                         </div>
                         <div>
-                            <h3 className="font-display font-semibold text-base">Lumière Concierge</h3>
+                            <h3 className="font-display font-semibold text-base">Lumière Elite</h3>
                             <p className="text-[11px] text-white/90 flex items-center gap-1.5">
                                 <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full" />
-                                Online • Ready to help
+                                Personal Luxury Stylist
                             </p>
                         </div>
                     </div>
@@ -769,7 +769,7 @@ const Chatbot = () => {
                         </Button>
                     </form>
                     <p className="text-[9px] text-neutral-400 text-center mt-2 tracking-widest uppercase">
-                        Lumière Concierge
+                        Lumière Elite
                     </p>
                 </div>
             </div>

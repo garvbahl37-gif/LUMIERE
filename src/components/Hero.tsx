@@ -53,7 +53,7 @@ const Hero = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       changeSlide((activeSlide + 1) % slides.length);
-    }, 8000);
+    }, 2000);
     return () => clearInterval(interval);
   }, [activeSlide, isTransitioning]);
 
