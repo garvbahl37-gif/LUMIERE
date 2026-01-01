@@ -91,7 +91,7 @@ const CollectionGrid = ({ products, isLoading = false }: CollectionGridProps) =>
                 <>
                     {/* Grid View */}
                     {viewMode === "grid" && (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 lg:gap-10 animate-in fade-in-0 duration-500">
+                        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-8 lg:gap-10 animate-in fade-in-0 duration-500">
                             {products.map((product, index) => (
                                 <ProductCard
                                     key={product._id}
@@ -112,7 +112,7 @@ const CollectionGrid = ({ products, isLoading = false }: CollectionGridProps) =>
 
                     {/* Masonry View - Pinterest Style with Featured Products */}
                     {viewMode === "masonry" && (
-                        <div className="columns-1 sm:columns-2 lg:columns-3 gap-8 lg:gap-10 space-y-8 lg:space-y-10 animate-in fade-in-0 duration-500">
+                        <div className="columns-2 lg:columns-3 gap-4 md:gap-8 lg:gap-10 space-y-4 md:space-y-8 lg:space-y-10 animate-in fade-in-0 duration-500">
                             {products.map((product, index) => (
                                 <div
                                     key={product._id}

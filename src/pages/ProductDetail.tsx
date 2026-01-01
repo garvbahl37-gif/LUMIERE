@@ -181,8 +181,8 @@ const ProductDetail = () => {
                                             key={index}
                                             onClick={() => setSelectedImage(index)}
                                             className={`flex-shrink-0 w-16 h-16 lg:w-20 lg:h-20 overflow-hidden rounded-xl border-2 transition-all ${selectedImage === index
-                                                    ? 'border-accent ring-2 ring-accent/20'
-                                                    : 'border-transparent hover:border-border'
+                                                ? 'border-accent ring-2 ring-accent/20'
+                                                : 'border-transparent hover:border-border'
                                                 }`}
                                         >
                                             <img
@@ -255,10 +255,10 @@ const ProductDetail = () => {
 
                                 {/* Stock Status */}
                                 <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium ${product.stock > 5
-                                        ? 'bg-green-500/10 text-green-600'
-                                        : product.stock > 0
-                                            ? 'bg-amber-500/10 text-amber-600'
-                                            : 'bg-red-500/10 text-red-600'
+                                    ? 'bg-green-500/10 text-green-600'
+                                    : product.stock > 0
+                                        ? 'bg-amber-500/10 text-amber-600'
+                                        : 'bg-red-500/10 text-red-600'
                                     }`}>
                                     <span className={`w-2 h-2 rounded-full ${product.stock > 5 ? 'bg-green-500' : product.stock > 0 ? 'bg-amber-500' : 'bg-red-500'
                                         }`} />
@@ -401,12 +401,12 @@ const ProductDetail = () => {
 
                             {/* Add to Cart */}
                             <Button
-                                className="flex-1 h-12 rounded-xl font-medium"
+                                className="flex-1 h-12 rounded-xl font-medium text-sm px-2"
                                 onClick={handleAddToCart}
                                 disabled={product.stock === 0}
                             >
-                                <ShoppingBag size={18} className="mr-2" />
-                                Add · ${(product.price * quantity).toLocaleString()}
+                                <ShoppingBag size={16} className="mr-1.5" />
+                                <span className="truncate">Add · ${(product.price * quantity).toLocaleString()}</span>
                             </Button>
 
                             {/* Wishlist */}
@@ -429,55 +429,9 @@ const ProductDetail = () => {
                 )}
             </AnimatePresence>
 
-            {/* Initial Mobile Bottom Bar (before scroll) */}
-            <div className={`lg:hidden fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-lg border-t border-border p-4 z-50 transition-opacity ${showStickyBar ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
-                <div className="flex items-center gap-3">
-                    <div className="flex items-center border border-border rounded-xl overflow-hidden">
-                        <button
-                            onClick={decrementQuantity}
-                            className="p-2.5 hover:bg-secondary transition-colors"
-                            disabled={quantity <= 1}
-                        >
-                            <Minus size={14} />
-                        </button>
-                        <span className="w-10 text-center font-medium text-sm">{quantity}</span>
-                        <button
-                            onClick={incrementQuantity}
-                            className="p-2.5 hover:bg-secondary transition-colors"
-                            disabled={quantity >= product.stock}
-                        >
-                            <Plus size={14} />
-                        </button>
-                    </div>
-
-                    <Button
-                        className="flex-1 h-12 rounded-xl font-medium"
-                        onClick={handleAddToCart}
-                        disabled={product.stock === 0}
-                    >
-                        <ShoppingBag size={18} className="mr-2" />
-                        Add · ${(product.price * quantity).toLocaleString()}
-                    </Button>
-
-                    <Button
-                        variant={isInWishlist(product._id) ? "default" : "outline"}
-                        size="icon"
-                        className="w-12 h-12 rounded-xl flex-shrink-0"
-                        onClick={() => {
-                            if (isInWishlist(product._id)) {
-                                removeFromWishlist(product._id);
-                            } else {
-                                addToWishlist(product._id);
-                            }
-                        }}
-                    >
-                        <Heart size={18} fill={isInWishlist(product._id) ? "currentColor" : "none"} />
-                    </Button>
-                </div>
-            </div>
 
             <Footer />
-        </div>
+        </div >
     );
 };
 

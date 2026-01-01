@@ -39,7 +39,7 @@ const Shop = () => {
 
     useEffect(() => {
         fetchProducts();
-    }, [selectedCategory, sortBy, searchParams, pagination.page]);
+    }, [selectedCategory, sortBy, searchParams, pagination.page, priceRange]);
 
     const fetchCategories = async () => {
         try {
@@ -61,31 +61,17 @@ const Shop = () => {
                 category: selectedCategory || undefined,
                 sort: sortBy as any,
                 search: searchParams.get("search") || undefined,
+                minPrice: priceRange[0],
+                maxPrice: priceRange[1],
+                gender: (genderFilter === "men" || genderFilter === "women") ? genderFilter : undefined,
                 page: pagination.page,
-                limit: 50,
+                limit: 12, // Reduced limit to match design
             });
+
             if (response.success) {
-                let filteredProducts = response.data;
-
-                // Apply gender filter
-                if (genderFilter === "women" && !selectedCategory) {
-                    filteredProducts = response.data.filter(p =>
-                        !p.categoryName.toLowerCase().includes("men's") &&
-                        !p.categoryName.toLowerCase().startsWith("men")
-                    );
-                } else if (genderFilter === "men" && !selectedCategory) {
-                    filteredProducts = response.data.filter(p =>
-                        p.categoryName.toLowerCase().includes("men's") ||
-                        p.categoryName.toLowerCase().startsWith("men")
-                    );
-                }
-
-                setProducts(filteredProducts.slice(0, 12));
+                setProducts(response.data);
                 if (response.pagination) {
-                    setPagination({
-                        ...response.pagination,
-                        total: genderFilter ? filteredProducts.length : response.pagination.total
-                    });
+                    setPagination(response.pagination);
                 }
             }
         } catch (error) {
@@ -166,7 +152,7 @@ const Shop = () => {
                             )}
 
                             {/* Main Title - Premium Typography */}
-                            <h1 className="font-display text-5xl md:text-7xl lg:text-8xl text-white leading-tight animate-fade-up opacity-0" style={{ animationDelay: '200ms' }}>
+                            <h1 className="font-display text-4xl md:text-7xl lg:text-8xl text-white leading-tight animate-fade-up opacity-0" style={{ animationDelay: '200ms' }}>
                                 {selectedCategory ? (
                                     <>
                                         <span className="font-normal block mb-2">Explore</span>

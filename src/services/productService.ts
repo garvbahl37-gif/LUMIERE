@@ -44,11 +44,27 @@ export interface ProductFilters {
     search?: string;
     page?: number;
     limit?: number;
+    gender?: 'men' | 'women';
 }
 
 // Local filtering and sorting functions
 const filterProducts = (products: MockProduct[], filters: ProductFilters): MockProduct[] => {
     let filtered = [...products];
+
+    // Gender filter (apply first for better performance)
+    if (filters.gender) {
+        if (filters.gender === 'women') {
+            filtered = filtered.filter(p =>
+                !p.categoryName.toLowerCase().includes("men's") &&
+                !p.categoryName.toLowerCase().startsWith("men")
+            );
+        } else if (filters.gender === 'men') {
+            filtered = filtered.filter(p =>
+                p.categoryName.toLowerCase().includes("men's") ||
+                p.categoryName.toLowerCase().startsWith("men")
+            );
+        }
+    }
 
     // Category filter
     if (filters.category) {
