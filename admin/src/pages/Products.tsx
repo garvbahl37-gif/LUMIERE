@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Plus, Search, Filter, MoreVertical, Edit, Trash2, Eye } from 'lucide-react';
-import { productService } from '../services/api';
+import { Plus, Search, Filter, Edit, Trash2, Eye } from 'lucide-react';
+// import { productService } from '../services/api';
 
 const Products = () => {
     const [products, setProducts] = useState<any[]>([]);

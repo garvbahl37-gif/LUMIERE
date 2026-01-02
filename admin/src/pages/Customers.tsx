@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, Filter, Mail, Phone, MapPin, MoreHorizontal, User, Shield, ShieldCheck } from 'lucide-react';
+import { Search, Filter, Mail, Phone, MoreHorizontal, User, Shield, ShieldCheck } from 'lucide-react';
 import { userService } from '../services/api';
 
 const Customers = () => {

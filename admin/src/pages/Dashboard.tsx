@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { productService, orderService } from '../services/api';
-import { DollarSign, Package, ShoppingBag, TrendingUp } from 'lucide-react';
+
+import { DollarSign, Package, ShoppingBag } from 'lucide-react';
 
 const Dashboard = () => {
     const [stats, setStats] = useState({
