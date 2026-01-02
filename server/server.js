@@ -19,14 +19,7 @@ dotenv.config();
 const app = express();
 
 // Connect DB Middleware (Prevents cold start crashes)
-app.use(async (req, res, next) => {
-    try {
-        await connectDB();
-    } catch (error) {
-        console.error('DB Connection Error:', error);
-    }
-    next();
-});
+// DB Connection middleware moved below health check
 
 // Middleware
 app.use(cors({
@@ -39,6 +32,17 @@ app.use(express.urlencoded({ extended: true }));
 // API Routes
 app.get('/', (req, res) => {
     res.send('API is running...');
+});
+
+// Connect DB Middleware (Moved here so Root health check works even if DB fails)
+app.use(async (req, res, next) => {
+    if (req.path === '/') return next(); // Double safety
+    try {
+        await connectDB();
+    } catch (error) {
+        console.error('DB Connection Error:', error);
+    }
+    next();
 });
 
 app.use('/api/auth', authRoutes);
