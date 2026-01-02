@@ -15,7 +15,15 @@ const Products = () => {
                 // Map MongoDB data to UI structure if needed, or use directly if interface matches
                 // The API returns {_id, ...}, UI uses {id, ...}
                 // Also ensure we handle the response correctly (array vs object with data property)
-                const productList = Array.isArray(data) ? data : (data.products || []);
+
+                let productList = [];
+                if (Array.isArray(data)) {
+                    productList = data;
+                } else if (data?.products && Array.isArray(data.products)) {
+                    productList = data.products;
+                } else if (data?.data && Array.isArray(data.data)) {
+                    productList = data.data;
+                }
 
                 setProducts(productList.map((p: any) => ({
                     ...p,
