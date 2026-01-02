@@ -105,11 +105,13 @@ const Checkout = () => {
 
         try {
             // If user is authenticated, save to MongoDB
+            console.log('Checkout Auth Status:', isAuthenticated);
             if (isAuthenticated) {
                 // Get fresh token and update localStorage (so axios interceptor picks it up)
                 const token = await getToken();
                 if (token) {
                     localStorage.setItem('token', token);
+                    console.log('Token refreshed');
                 }
 
                 const response = await orderService.createOrderDirect({
@@ -128,6 +130,8 @@ const Checkout = () => {
                     totalPrice: orderTotal
                 });
 
+                console.log('Order API Response:', response);
+
                 if (response.success) {
                     // Clear cart
                     clearCart();
@@ -137,8 +141,11 @@ const Checkout = () => {
                     return;
                 }
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error('Failed to save order to database:', error);
+            console.error('Error Details:', error.response?.data || error.message);
+            // Show toast so user knows something went wrong with the server connection
+            toast.error(`Server connection warning: ${error.message}. Saving order locally.`);
             // Fall through to localStorage fallback
         }
 
