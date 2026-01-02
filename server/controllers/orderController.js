@@ -205,8 +205,9 @@ export const createOrderDirect = async (req, res) => {
         });
 
         // Create order
-        const order = await Order.create({
-            user: req.user._id,
+        const orderData = {
+            // Use user ID if authenticated, otherwise undefined (guest)
+            ...(req.user && { user: req.user._id }),
             items: orderItems,
             shippingAddress: {
                 fullName: shippingAddress.fullName,
