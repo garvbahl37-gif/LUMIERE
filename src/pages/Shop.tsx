@@ -22,7 +22,7 @@ const Shop = () => {
     // Filter states
     const [search, setSearch] = useState(searchParams.get("search") || "");
     const [selectedCategory, setSelectedCategory] = useState(searchParams.get("category") || "");
-    const [priceRange, setPriceRange] = useState([0, 500]);
+    const [priceRange, setPriceRange] = useState([0, 5000]);
     const [sortBy, setSortBy] = useState(searchParams.get("sort") || "newest");
 
     // Sync category from URL params when they change
@@ -334,7 +334,7 @@ const Shop = () => {
                                         <Slider
                                             value={priceRange}
                                             onValueChange={setPriceRange}
-                                            max={500}
+                                            max={5000}
                                             step={10}
                                             className="mb-4 py-4"
                                         />
