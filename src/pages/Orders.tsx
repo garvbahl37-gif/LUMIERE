@@ -45,7 +45,7 @@ const Orders = () => {
                     const response = await orderService.getOrders();
                     if (response.success && response.data) {
                         const dbOrders = response.data.map((order: Order) => ({
-                            id: order._id,
+                            id: order.orderNumber || order._id,
                             items: order.items,
                             total: order.totalPrice,
                             date: order.createdAt,
