@@ -9,14 +9,50 @@ const Dashboard = () => {
         revenue: 0
     });
 
+    const [loading, setLoading] = useState(true);
+
     useEffect(() => {
-        // Mock stats for now or fetch from API if ready
-        // async function fetchStats() { ... }
-        setStats({
-            products: 154,
-            orders: 23,
-            revenue: 12450
-        });
+        const fetchDashboardData = async () => {
+            try {
+                const [productsData, ordersData] = await Promise.all([
+                    productService.getAll({ limit: 1000 }),
+                    orderService.getAll()
+                ]);
+
+                // Handle diverse response structures
+                // Products
+                let productsList = [];
+                if (Array.isArray(productsData)) {
+                    productsList = productsData;
+                } else if (productsData?.products && Array.isArray(productsData.products)) {
+                    productsList = productsData.products;
+                } else if (productsData?.data && Array.isArray(productsData.data)) {
+                    productsList = productsData.data;
+                }
+
+                // Orders
+                const orders = Array.isArray(ordersData) ? ordersData : (ordersData.orders || []);
+
+                // Calculate Stats
+                const totalRevenue = orders.reduce((acc: number, order: any) => acc + (order.totalAmount || 0), 0);
+                const uniqueCustomers = new Set(orders.map((o: any) => o.email)).size;
+
+                setStats({
+                    revenue: totalRevenue,
+                    orders: orders.length,
+                    products: productsList.length,
+                    // @ts-ignore
+                    customers: uniqueCustomers
+                });
+
+            } catch (error) {
+                console.error("Dashboard fetch error:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchDashboardData();
     }, []);
 
     return (

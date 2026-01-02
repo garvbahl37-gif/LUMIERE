@@ -11,7 +11,7 @@ const Products = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const data = await productService.getAll();
+                const data = await productService.getAll({ limit: 1000 });
                 // Map MongoDB data to UI structure if needed, or use directly if interface matches
                 // The API returns {_id, ...}, UI uses {id, ...}
                 // Also ensure we handle the response correctly (array vs object with data property)
