@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useState, useEffect } from 'react';
 import { Plus, Search, Edit, Trash2, Eye } from 'lucide-react';
-import { productService } from '../services/api';
 import { productService } from '../services/api';
 import AddProduct from './AddProduct';
 
