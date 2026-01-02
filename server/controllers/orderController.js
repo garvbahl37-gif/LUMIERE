@@ -205,47 +205,47 @@ export const createOrderDirect = async (req, res) => {
         });
 
         // Create order
-    };
 
-    // Create order
-    const order = await Order.create({
-        // Use user ID if authenticated, otherwise undefined (guest)
-        ...(req.user && { user: req.user._id }),
-        items: orderItems,
-        shippingAddress: {
-            fullName: shippingAddress.fullName,
-            street: shippingAddress.street,
-            city: shippingAddress.city,
-            state: shippingAddress.state,
-            zipCode: shippingAddress.zipCode,
-            country: shippingAddress.country,
-            phone: shippingAddress.phone
-        },
-        paymentMethod: paymentMethod || 'card',
-        paymentStatus: 'paid',
-        itemsPrice: itemsPrice || 0,
-        shippingPrice: shippingPrice || 0,
-        taxPrice: taxPrice || 0,
-        totalPrice: totalPrice || 0,
-        status: 'processing',
-        paidAt: new Date()
-    });
 
-    res.status(201).json({
-        success: true,
-        data: order
-    });
-} catch (error) {
-    console.error('Create order error details:', error);
-    if (error.name === 'ValidationError') {
-        const messages = Object.values(error.errors).map(val => val.message);
-        console.error('Validation messages:', messages);
+        // Create order
+        const order = await Order.create({
+            // Use user ID if authenticated, otherwise undefined (guest)
+            ...(req.user && { user: req.user._id }),
+            items: orderItems,
+            shippingAddress: {
+                fullName: shippingAddress.fullName,
+                street: shippingAddress.street,
+                city: shippingAddress.city,
+                state: shippingAddress.state,
+                zipCode: shippingAddress.zipCode,
+                country: shippingAddress.country,
+                phone: shippingAddress.phone
+            },
+            paymentMethod: paymentMethod || 'card',
+            paymentStatus: 'paid',
+            itemsPrice: itemsPrice || 0,
+            shippingPrice: shippingPrice || 0,
+            taxPrice: taxPrice || 0,
+            totalPrice: totalPrice || 0,
+            status: 'processing',
+            paidAt: new Date()
+        });
+
+        res.status(201).json({
+            success: true,
+            data: order
+        });
+    } catch (error) {
+        console.error('Create order error details:', error);
+        if (error.name === 'ValidationError') {
+            const messages = Object.values(error.errors).map(val => val.message);
+            console.error('Validation messages:', messages);
+        }
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
     }
-    res.status(500).json({
-        success: false,
-        message: error.message
-    });
-}
 };
 
 // @desc    Update order status (Admin)
