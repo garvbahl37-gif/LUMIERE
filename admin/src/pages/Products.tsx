@@ -41,17 +41,18 @@ const Products = () => {
     }, []);
 
     const [showAddModal, setShowAddModal] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState<any>(null);
+    const [showViewModal, setShowViewModal] = useState(false);
+
+    // Pagination Logic
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
-
-    // ... (fetchProducts useEffect) ...
 
     const filteredProducts = products.filter(p =>
         p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         p.category.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    // Pagination Logic
     const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
     const paginatedProducts = filteredProducts.slice(
         (currentPage - 1) * itemsPerPage,
@@ -64,23 +65,91 @@ const Products = () => {
         }
     };
 
-    const handleDelete = (id: number) => {
-        if (window.confirm('Are you sure you want to delete this product? This cannot be undone.')) {
-            setProducts(products.filter(p => p.id !== id));
-            // In real app: await productService.delete(id);
+    const handleDelete = async (id: string, name: string) => {
+        if (window.confirm(`Are you sure you want to delete "${name}"? This cannot be undone.`)) {
+            try {
+                // Optimistic UI update
+                setProducts(products.filter(p => p.id !== id));
+                await productService.delete(id);
+            } catch (error) {
+                console.error("Failed to delete product", error);
+                alert("Failed to delete product. It might have already been removed.");
+                // Revert or re-fetch could happen here
+                window.location.reload();
+            }
         }
-    }
+    };
+
+    const handleEdit = (product: any) => {
+        setSelectedProduct(product);
+        setShowAddModal(true);
+    };
+
+    const handleView = (product: any) => {
+        setSelectedProduct(product);
+        setShowViewModal(true);
+    };
 
     return (
         <div className="space-y-6 animate-fade-in">
             {showAddModal && (
                 <AddProduct
-                    onClose={() => setShowAddModal(false)}
+                    initialData={selectedProduct}
+                    onClose={() => {
+                        setShowAddModal(false);
+                        setSelectedProduct(null);
+                    }}
                     onSuccess={() => {
-                        // Ideally refetch products here
                         window.location.reload();
                     }}
                 />
+            )}
+
+            {/* View Modal */}
+            {showViewModal && selectedProduct && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-fade-in">
+                    <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden">
+                        <div className="relative h-64 bg-slate-100">
+                            <img src={selectedProduct.image} alt={selectedProduct.name} className="w-full h-full object-cover" />
+                            <button
+                                onClick={() => setShowViewModal(false)}
+                                className="absolute top-4 right-4 p-2 bg-black/50 hover:bg-black/70 text-white rounded-full transition-colors"
+                            >
+                                <Plus size={20} className="rotate-45" />
+                            </button>
+                        </div>
+                        <div className="p-6">
+                            <div className="flex justify-between items-start mb-4">
+                                <div>
+                                    <span className="text-xs font-bold text-rose-500 uppercase tracking-wide">{selectedProduct.category}</span>
+                                    <h2 className="text-2xl font-bold text-slate-800 mt-1">{selectedProduct.name}</h2>
+                                    <p className="text-slate-400 text-xs font-mono mt-1">ID: {selectedProduct.id}</p>
+                                </div>
+                                <span className="text-xl font-bold text-slate-900">${selectedProduct.price.toLocaleString()}</span>
+                            </div>
+
+                            <p className="text-slate-600 text-sm leading-relaxed mb-6">
+                                {selectedProduct.description || "No description available."}
+                            </p>
+
+                            <div className="flex gap-4 justify-between items-center pt-4 border-t border-slate-100">
+                                <div className="flex items-center gap-2 text-sm text-slate-600">
+                                    <span className={`w-2 h-2 rounded-full ${selectedProduct.stock > 0 ? 'bg-emerald-500' : 'bg-rose-500'}`}></span>
+                                    <span className="font-medium">{selectedProduct.stock} in stock</span>
+                                </div>
+                                <button
+                                    onClick={() => {
+                                        setShowViewModal(false);
+                                        handleEdit(selectedProduct);
+                                    }}
+                                    className="px-4 py-2 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition-colors"
+                                >
+                                    Edit Product
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             )}
 
             {/* Header */}
@@ -90,7 +159,10 @@ const Products = () => {
                     <p className="text-slate-500 text-sm mt-1">Manage your store inventory ({products.length} items)</p>
                 </div>
                 <button
-                    onClick={() => setShowAddModal(true)}
+                    onClick={() => {
+                        setSelectedProduct(null);
+                        setShowAddModal(true);
+                    }}
                     className="bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-lg flex items-center gap-2 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                 >
                     <Plus size={20} />
@@ -178,14 +250,18 @@ const Products = () => {
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <button className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="View">
+                                                <button
+                                                    onClick={() => handleView(product)}
+                                                    className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="View">
                                                     <Eye size={18} />
                                                 </button>
-                                                <button className="p-2 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors" title="Edit">
+                                                <button
+                                                    onClick={() => handleEdit(product)}
+                                                    className="p-2 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors" title="Edit">
                                                     <Edit size={18} />
                                                 </button>
                                                 <button
-                                                    onClick={() => handleDelete(product.id)}
+                                                    onClick={() => handleDelete(product.id, product.name)}
                                                     className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
                                                     title="Delete"
                                                 >

@@ -1,14 +1,15 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X, Save } from 'lucide-react';
 import { productService } from '../services/api';
 
 interface AddProductProps {
     onClose: () => void;
     onSuccess: () => void;
+    initialData?: any; // If provided, we are in Edit mode
 }
 
-const AddProduct = ({ onClose, onSuccess }: AddProductProps) => {
+const AddProduct = ({ onClose, onSuccess, initialData }: AddProductProps) => {
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
@@ -19,6 +20,19 @@ const AddProduct = ({ onClose, onSuccess }: AddProductProps) => {
         image: ''
     });
 
+    useEffect(() => {
+        if (initialData) {
+            setFormData({
+                name: initialData.name || '',
+                category: initialData.category || '',
+                price: initialData.price || '',
+                stock: initialData.stock || '',
+                description: initialData.description || '',
+                image: initialData.image || ''
+            });
+        }
+    }, [initialData]);
+
     const categories = ['Handbags', 'Jewelry', 'Shoes', 'Dresses', 'Accessories', 'Men\'s Watches', 'Men\'s Bags', 'Men\'s Shoes', 'Men\'s Suits', 'Men\'s Accessories'];
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -26,19 +40,26 @@ const AddProduct = ({ onClose, onSuccess }: AddProductProps) => {
         setLoading(true);
 
         try {
-            await productService.create({
+            const productData = {
                 ...formData,
                 price: Number(formData.price),
                 stock: Number(formData.stock),
-                images: [formData.image], // Backend expects array
+                images: [formData.image],
                 isNew: true,
                 isActive: true
-            });
+            };
+
+            if (initialData) {
+                await productService.update(initialData.id, productData);
+            } else {
+                await productService.create(productData);
+            }
+
             onSuccess();
             onClose();
         } catch (error) {
-            console.error('Failed to create product', error);
-            alert('Failed to create product. Please check console.');
+            console.error('Failed to save product', error);
+            alert('Failed to save product. Please check console.');
         } finally {
             setLoading(false);
         }
@@ -48,7 +69,7 @@ const AddProduct = ({ onClose, onSuccess }: AddProductProps) => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-fade-in">
             <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
                 <div className="p-6 border-b border-slate-100 flex justify-between items-center sticky top-0 bg-white z-10">
-                    <h2 className="text-xl font-bold text-slate-800">Add New Product</h2>
+                    <h2 className="text-xl font-bold text-slate-800">{initialData ? 'Edit Product' : 'Add New Product'}</h2>
                     <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full text-slate-400 hover:text-slate-600 transition-colors">
                         <X size={20} />
                     </button>
@@ -140,7 +161,7 @@ const AddProduct = ({ onClose, onSuccess }: AddProductProps) => {
                         <button type="button" onClick={onClose} className="px-5 py-2.5 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors font-medium">Cancel</button>
                         <button type="submit" disabled={loading} className="px-5 py-2.5 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors flex items-center gap-2 font-medium disabled:opacity-50">
                             {loading ? <span className="animate-spin w-4 h-4 border-2 border-white/20 border-t-white rounded-full" /> : <Save size={18} />}
-                            Save Product
+                            {initialData ? 'Update Product' : 'Save Product'}
                         </button>
                     </div>
                 </form>
