@@ -13,10 +13,20 @@ import orderRoutes from './routes/orderRoutes.js';
 // Load env vars
 dotenv.config();
 
-// Connect to database
-connectDB();
+// Connect to database (Removed global call for Vercel)
+// connectDB();
 
 const app = express();
+
+// Connect DB Middleware (Prevents cold start crashes)
+app.use(async (req, res, next) => {
+    try {
+        await connectDB();
+    } catch (error) {
+        console.error('DB Connection Error:', error);
+    }
+    next();
+});
 
 // Middleware
 app.use(cors({
