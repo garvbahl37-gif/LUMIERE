@@ -45,7 +45,7 @@ const OrderSuccess = () => {
                     const response = await orderService.getOrder(id);
                     if (response.success && response.data) {
                         setOrder({
-                            id: response.data._id,
+                            id: response.data.orderNumber || response.data._id, // Prefer readable ID
                             items: response.data.items,
                             shipping: response.data.shippingAddress,
                             total: response.data.totalPrice,
