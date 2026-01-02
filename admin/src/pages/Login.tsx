@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Lock, Mail, ArrowRight, ShieldCheck } from 'lucide-react';
+import { authService } from '../services/api';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -9,21 +10,28 @@ const Login = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
         setError('');
 
-        // Simulation of login - In real world, call authService.login(email, password)
-        setTimeout(() => {
-            if (email === 'admin@lumiere.com' && password === 'admin') {
-                localStorage.setItem('admin_token', 'fake-jwt-token');
+        try {
+            // Real login call
+            const response = await authService.login({ email, password });
+
+            if (response.success && response.data.role === 'admin') {
+                localStorage.setItem('admin_token', response.data.token);
+                localStorage.setItem('admin_user', JSON.stringify(response.data));
                 navigate('/');
             } else {
-                setError('Invalid credentials. Try admin@lumiere.com / admin');
+                setError('Access denied. Admin privileges required.');
                 setLoading(false);
             }
-        }, 1000);
+        } catch (err: any) {
+            console.error('Login Failed:', err);
+            setError(err.response?.data?.message || 'Invalid credentials');
+            setLoading(false);
+        }
     };
 
     return (

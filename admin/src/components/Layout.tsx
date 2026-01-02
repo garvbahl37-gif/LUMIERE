@@ -17,7 +17,16 @@ const Sidebar = () => (
         </nav>
 
         <div className="pt-4 border-t border-slate-700">
-            <button className="flex items-center gap-3 px-4 py-3 w-full text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors">
+            <button
+                onClick={() => {
+                    if (confirm('Are you sure you want to logout?')) {
+                        localStorage.removeItem('admin_token');
+                        localStorage.removeItem('admin_user');
+                        window.location.href = '/login';
+                    }
+                }}
+                className="flex items-center gap-3 px-4 py-3 w-full text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
+            >
                 <LogOut size={20} />
                 <span className="font-medium">Logout</span>
             </button>

@@ -9,17 +9,24 @@ const api = axios.create({
     },
 });
 
-// Add interceptor for auth token (placeholder for when we add Auth)
+// Add interceptor for auth token
 api.interceptors.request.use(
     (config) => {
-        // const token = localStorage.getItem('admin_token');
-        // if (token) {
-        //     config.headers.Authorization = `Bearer ${token}`;
-        // }
+        const token = localStorage.getItem('admin_token');
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
         return config;
     },
     (error) => Promise.reject(error)
 );
+
+export const authService = {
+    login: async (credentials: any) => {
+        const response = await api.post('/auth/login', credentials);
+        return response.data;
+    }
+};
 
 export const productService = {
     getAll: async () => {

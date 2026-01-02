@@ -4,19 +4,23 @@ import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import Products from './pages/Products';
 import Customers from './pages/Customers';
-
 import Orders from './pages/Orders';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="products" element={<Products />} />
-          <Route path="customers" element={<Customers />} />
-          <Route path="orders" element={<Orders />} />
+
+        {/* Protected Routes */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="products" element={<Products />} />
+            <Route path="customers" element={<Customers />} />
+            <Route path="orders" element={<Orders />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

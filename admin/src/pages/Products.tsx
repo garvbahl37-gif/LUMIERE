@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Plus, Search, Filter, Edit, Trash2, Eye } from 'lucide-react';
-// import { productService } from '../services/api';
+import { productService } from '../services/api';
 
 const Products = () => {
     const [products, setProducts] = useState<any[]>([]);
@@ -8,17 +8,27 @@ const Products = () => {
     const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
-        // Fetch products (using mock data for now to demonstrate UI)
-        // In real app: productService.getAll().then(setProducts)...
-        setTimeout(() => {
-            setProducts([
-                { id: 1, name: "Premium Leather Bag", category: "Handbags", price: 250, stock: 15, image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=500" },
-                { id: 2, name: "Gold Chain Necklace", category: "Jewelry", price: 1200, stock: 4, image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" },
-                { id: 3, name: "Silk Evening Dress", category: "Dresses", price: 890, stock: 8, image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=500" },
-                { id: 4, name: "Luxury Watch", category: "Accessories", price: 4500, stock: 2, image: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=500" },
-            ]);
-            setLoading(false);
-        }, 1000);
+        const fetchProducts = async () => {
+            try {
+                const data = await productService.getAll();
+                // Map MongoDB data to UI structure if needed, or use directly if interface matches
+                // The API returns {_id, ...}, UI uses {id, ...}
+                // Also ensure we handle the response correctly (array vs object with data property)
+                const productList = Array.isArray(data) ? data : (data.products || []);
+
+                setProducts(productList.map((p: any) => ({
+                    ...p,
+                    id: p._id, // Map _id to id for the table
+                    category: p.categoryName || 'Uncategorized'
+                })));
+            } catch (error) {
+                console.error("Failed to fetch products", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProducts();
     }, []);
 
     const filteredProducts = products.filter(p =>
