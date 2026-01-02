@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Plus, Search, Filter, Edit, Trash2, Eye } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Plus, Search, Edit, Trash2, Eye } from 'lucide-react';
 import { productService } from '../services/api';
+import { productService } from '../services/api';
+import AddProduct from './AddProduct';
 
 const Products = () => {
     const [products, setProducts] = useState<any[]>([]);
@@ -31,27 +34,59 @@ const Products = () => {
         fetchProducts();
     }, []);
 
+    const [showAddModal, setShowAddModal] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
+
+    // ... (fetchProducts useEffect) ...
+
     const filteredProducts = products.filter(p =>
         p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         p.category.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    // Pagination Logic
+    const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+    const paginatedProducts = filteredProducts.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
+
+    const handlePageChange = (page: number) => {
+        if (page >= 1 && page <= totalPages) {
+            setCurrentPage(page);
+        }
+    };
+
     const handleDelete = (id: number) => {
         if (window.confirm('Are you sure you want to delete this product? This cannot be undone.')) {
             setProducts(products.filter(p => p.id !== id));
-            // Show toast success here
+            // In real app: await productService.delete(id);
         }
     }
 
     return (
         <div className="space-y-6 animate-fade-in">
+            {showAddModal && (
+                <AddProduct
+                    onClose={() => setShowAddModal(false)}
+                    onSuccess={() => {
+                        // Ideally refetch products here
+                        window.location.reload();
+                    }}
+                />
+            )}
+
             {/* Header */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
                     <h1 className="text-2xl font-bold text-slate-800">Products</h1>
-                    <p className="text-slate-500 text-sm mt-1">Manage your store inventory</p>
+                    <p className="text-slate-500 text-sm mt-1">Manage your store inventory ({products.length} items)</p>
                 </div>
-                <button className="bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-lg flex items-center gap-2 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                <button
+                    onClick={() => setShowAddModal(true)}
+                    className="bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-lg flex items-center gap-2 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                >
                     <Plus size={20} />
                     <span className="font-medium">Add Product</span>
                 </button>
@@ -65,19 +100,18 @@ const Products = () => {
                         type="text"
                         placeholder="Search products..."
                         value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
+                        onChange={(e) => {
+                            setSearchTerm(e.target.value);
+                            setCurrentPage(1); // Reset page on search
+                        }}
                         className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 transition-all"
                     />
                 </div>
-                <button className="flex items-center gap-2 px-4 py-2 text-slate-600 hover:bg-slate-50 rounded-lg border border-slate-200 transition-colors">
-                    <Filter size={18} />
-                    <span>Filters</span>
-                </button>
             </div>
 
             {/* Table */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                <div className="overflow-x-auto">
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col min-h-[400px]">
+                <div className="overflow-x-auto flex-1">
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="bg-slate-50/50 border-b border-slate-200 text-xs uppercase tracking-wider text-slate-500 font-semibold">
@@ -102,7 +136,7 @@ const Products = () => {
                                     </tr>
                                 ))
                             ) : (
-                                filteredProducts.map((product) => (
+                                paginatedProducts.map((product) => (
                                     <tr key={product.id} className="hover:bg-slate-50/50 transition-colors group">
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-4">
@@ -112,8 +146,8 @@ const Products = () => {
                                                     className="w-12 h-12 rounded-lg object-cover border border-slate-100 shadow-sm"
                                                 />
                                                 <div>
-                                                    <p className="font-medium text-slate-900">{product.name}</p>
-                                                    <p className="text-xs text-slate-500">ID: {product.id}</p>
+                                                    <p className="font-medium text-slate-900 line-clamp-1">{product.name}</p>
+                                                    <p className="text-xs text-slate-500 font-mono">ID: {String(product.id).substring(0, 6)}...</p>
                                                 </div>
                                             </div>
                                         </td>
@@ -128,7 +162,7 @@ const Products = () => {
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-2">
                                                 <span className={`w-2 h-2 rounded-full ${product.stock > 10 ? 'bg-emerald-500' : 'bg-amber-500'}`}></span>
-                                                <span className="text-sm text-slate-600">{product.stock} in stock</span>
+                                                <span className="text-sm text-slate-600 font-mono">{product.stock}</span>
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">
@@ -159,9 +193,40 @@ const Products = () => {
                         </tbody>
                     </table>
                 </div>
-                {!loading && filteredProducts.length === 0 && (
-                    <div className="p-12 text-center">
-                        <p className="text-slate-500">No products found matching "{searchTerm}"</p>
+
+                {/* Empty State / Pagination Footer */}
+                {!loading && products.length === 0 && (
+                    <div className="p-12 text-center flex flex-col items-center justify-center flex-1">
+                        <div className="bg-slate-50 p-4 rounded-full mb-3">
+                            <Search className="text-slate-300" size={32} />
+                        </div>
+                        <h3 className="text-lg font-medium text-slate-800">No Products Found</h3>
+                        <p className="text-slate-500 mt-1 max-w-sm">We couldn't fetch any products from the server. Please check your connection.</p>
+                        <button onClick={() => window.location.reload()} className="mt-4 text-rose-600 hover:text-rose-700 font-medium text-sm">Refresh Page</button>
+                    </div>
+                )}
+
+                {products.length > 0 && (
+                    <div className="border-t border-slate-200 bg-slate-50 p-4 flex items-center justify-between">
+                        <span className="text-sm text-slate-500">
+                            Showing <span className="font-medium">{Math.min(filteredProducts.length, (currentPage - 1) * itemsPerPage + 1)}-{Math.min(filteredProducts.length, currentPage * itemsPerPage)}</span> of {filteredProducts.length} results
+                        </span>
+                        <div className="flex gap-2">
+                            <button
+                                disabled={currentPage === 1}
+                                onClick={() => handlePageChange(currentPage - 1)}
+                                className="px-3 py-1 rounded border border-slate-300 bg-white text-slate-600 text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                Previous
+                            </button>
+                            <button
+                                disabled={currentPage === totalPages}
+                                onClick={() => handlePageChange(currentPage + 1)}
+                                className="px-3 py-1 rounded border border-slate-300 bg-white text-slate-600 text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                Next
+                            </button>
+                        </div>
                     </div>
                 )}
             </div>
