@@ -29,8 +29,8 @@ export const authService = {
 };
 
 export const productService = {
-    getAll: async () => {
-        const response = await api.get('/products');
+    getAll: async (params = {}) => {
+        const response = await api.get('/products', { params });
         return response.data;
     },
     create: async (data: any) => {
