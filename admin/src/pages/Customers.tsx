@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, Filter, Mail, Phone, MoreHorizontal, User, Shield, ShieldCheck } from 'lucide-react';
+import { Search, Filter, Mail, Phone, MoreHorizontal, User, Shield, ShieldCheck, RefreshCw } from 'lucide-react';
 import { userService } from '../services/api';
 
 const Customers = () => {
@@ -7,31 +7,40 @@ const Customers = () => {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
 
+    const [refreshing, setRefreshing] = useState(false);
+
+    const fetchUsers = async (isRefresh = false) => {
+        if (isRefresh) setRefreshing(true);
+        try {
+            const response = await userService.getAll();
+            // Map API data to UI format if needed, largely matches User model
+            const formatted = response.data.map((u: any) => ({
+                id: u._id,
+                name: u.name,
+                email: u.email,
+                phone: u.phone || 'N/A',
+                location: u.address ? (u.address.city && u.address.country ? `${u.address.city}, ${u.address.country}` : 'N/A') : 'N/A',
+                role: u.role === 'admin' ? 'Admin' : 'Customer',
+                status: 'Active', // Default for now
+                joined: new Date(u.createdAt).toLocaleDateString(),
+                avatar: u.avatar || `https://ui-avatars.com/api/?name=${u.name}`
+            }));
+            setCustomers(formatted);
+        } catch (error) {
+            console.error("Failed to fetch users", error);
+        } finally {
+            setLoading(false);
+            setRefreshing(false);
+        }
+    };
+
     useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                const response = await userService.getAll();
-                // Map API data to UI format if needed, largely matches User model
-                const formatted = response.data.map((u: any) => ({
-                    id: u._id,
-                    name: u.name,
-                    email: u.email,
-                    phone: u.phone || 'N/A',
-                    location: u.address ? `${u.address.city}, ${u.address.country}` : 'N/A',
-                    role: u.role === 'admin' ? 'Admin' : 'Customer',
-                    status: 'Active', // Default for now
-                    joined: new Date(u.createdAt).toLocaleDateString(),
-                    avatar: u.avatar || `https://ui-avatars.com/api/?name=${u.name}`
-                }));
-                setCustomers(formatted);
-            } catch (error) {
-                console.error("Failed to fetch users", error);
-            } finally {
-                setLoading(false);
-            }
-        };
         fetchUsers();
     }, []);
+
+    const handleRefresh = () => {
+        fetchUsers(true);
+    };
 
     const filteredCustomers = customers.filter(c =>
         c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -47,6 +56,13 @@ const Customers = () => {
                     <p className="text-slate-500 text-sm mt-1">View and manage your user base</p>
                 </div>
                 <div className="flex gap-3">
+                    <button
+                        onClick={handleRefresh}
+                        disabled={refreshing}
+                        className="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 px-4 py-2.5 rounded-lg flex items-center gap-2 transition-all shadow-sm disabled:opacity-70"
+                    >
+                        <RefreshCw size={18} className={refreshing ? "animate-spin" : ""} />
+                    </button>
                     <button className="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 px-4 py-2.5 rounded-lg flex items-center gap-2 transition-all shadow-sm">
                         <Filter size={18} />
                         <span className="font-medium">Export</span>

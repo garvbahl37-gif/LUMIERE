@@ -25,6 +25,10 @@ export const authService = {
     login: async (credentials: any) => {
         const response = await api.post('/auth/login', credentials);
         return response.data;
+    },
+    updateProfile: async (data: any) => {
+        const response = await api.put('/auth/profile', data);
+        return response.data;
     }
 };
 
@@ -58,6 +62,13 @@ export const orderService = {
 export const userService = {
     getAll: async () => {
         const response = await api.get('/auth/users');
+        return response.data;
+    },
+};
+
+export const subscriberService = {
+    getAll: async () => {
+        const response = await api.get('/subscribers');
         return response.data;
     },
 };
