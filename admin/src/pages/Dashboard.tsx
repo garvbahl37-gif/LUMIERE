@@ -153,14 +153,14 @@ const Dashboard = () => {
                                             <td className="py-3 pl-2 text-sm font-medium text-slate-700">#{order._id.substring(order._id.length - 6)}</td>
                                             <td className="py-3 text-sm text-slate-600">{order.shippingAddress?.fullName || order.user?.name || "Guest"}</td>
                                             <td className="py-3 text-sm text-slate-500">{new Date(order.createdAt).toLocaleDateString()}</td>
-                                            <td className="py-3 text-sm font-medium text-slate-800">${order.totalAmount?.toLocaleString()}</td>
+                                            <td className="py-3 text-sm font-medium text-slate-800">${(order.totalPrice || 0).toLocaleString()}</td>
                                             <td className="py-3 pr-2 text-right">
-                                                <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${order.isPaid
+                                                <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${order.paymentStatus === 'paid'
                                                     ? 'bg-emerald-50 text-emerald-700 border border-emerald-100'
                                                     : 'bg-amber-50 text-amber-700 border border-amber-100'
                                                     }`}>
-                                                    {order.isPaid ? <CheckCircle size={12} /> : <Clock size={12} />}
-                                                    {order.isPaid ? 'Paid' : 'Pending'}
+                                                    {order.paymentStatus === 'paid' ? <CheckCircle size={12} /> : <Clock size={12} />}
+                                                    {order.paymentStatus === 'paid' ? 'Paid' : 'Pending'}
                                                 </span>
                                             </td>
                                         </tr>
