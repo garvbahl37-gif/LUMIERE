@@ -1,23 +1,19 @@
-// Women's luxury products - 125 unique items with Selenium-scraped Unique Images
-export interface MockProduct {
-    _id: string;
-    name: string;
-    slug: string;
-    description: string;
-    price: number;
-    compareAtPrice?: number;
-    category: { _id: string; name: string; slug: string; };
-    categoryName: string;
-    image: string;
-    images: string[];
-    stock: number;
-    isNew: boolean;
-    isFeatured: boolean;
-    isActive: boolean;
-    rating: number;
-    numReviews: number;
-    tags: string[];
-}
+
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import Product from '../models/Product.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Load env vars
+// Hardcode path to root .env
+dotenv.config({ path: path.join(__dirname, '../../.env') });
+// Debug log
+console.log('Loading .env from:', path.join(__dirname, '../../.env'));
+console.log('MONGO_URI found:', !!process.env.MONGO_URI);
 
 const handbagsImages = [
     "https://i.pinimg.com/originals/12/82/d4/1282d4a666200ed84175c475f2467aca.jpg",
@@ -159,58 +155,27 @@ const accessoriesImages = [
     "https://oracleoftime.com/wp-content/uploads/2023/11/The-Strap-Tailor-Ostrich-Shin-Strap-1-768x1024.jpg",
 ];
 
-const fragranceImages = [
-    "https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1523293182086-7651a899d37f?q=80&w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?q=80&w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1588405748880-12d1d2a59f75?q=80&w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1616951849649-74dd2dd7e662?q=80&w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1595535373192-fc04375b997a?q=80&w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1615160737976-4d3752697b0a?q=80&w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1587017539504-67cfbddac569?q=80&w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1622618991746-fe6004db3d47?q=80&w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1585386959984-a4155224a1ad?q=80&w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1605553610931-c2770d7ee85d?q=80&w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1582211584512-d8b4dc6f16f7?q=80&w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1512777190995-52bb63e170e1?q=80&w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1594035910387-fea4779426e9?q=80&w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1588669462333-82c5f0a3597d?q=80&w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1630570077744-88390885e332?q=80&w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1563170351-be82bc888aa4?q=80&w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1592914610354-fd354ea45e48?q=80&w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1605625455822-79469550b71a?q=80&w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1533230408706-d89e5f560c5a?q=80&w=800&auto=format&fit=crop",
-];
-
 const handbagNames = ["Quilted Shoulder Bag", "Structured Tote", "Mini Crossbody", "Woven Clutch", "Saddle Bag", "Bucket Bag", "Chain Link Bag", "Envelope Clutch", "Doctor Bag", "Shopper Tote", "Flap Bag", "Hobo Bag", "Box Bag", "Baguette Bag", "Camera Bag", "Top Handle Bag", "Drawstring Bag", "Frame Bag", "Bowling Bag", "Satchel Bag", "Pouch Bag", "Circle Bag", "Belt Bag", "Trunk Bag", "Kelly Style Bag"];
-
 const jewelryNames = ["Diamond Bracelet", "Pearl Earrings", "Gold Necklace", "Sapphire Ring", "Tennis Bracelet", "Layered Necklace", "Emerald Earrings", "Bangle Set", "Pendant Necklace", "Cocktail Ring", "Charm Bracelet", "Hoop Earrings", "Chain Necklace", "Statement Ring", "Cuff Bracelet", "Drop Earrings", "Choker Necklace", "Eternity Ring", "Link Bracelet", "Stud Earrings", "Lariat Necklace", "Signet Ring", "Bar Bracelet", "Chandelier Earrings", "Collar Necklace"];
-
 const shoeNames = ["Patent Pumps", "Embellished Sandals", "Suede Boots", "Strappy Mules", "Ballet Flats", "Kitten Slingbacks", "Platform Loafers", "Velvet Pumps", "Block Heel Sandals", "Ankle Booties", "Pointed Stilettos", "Lace-Up Heels", "Slip-On Mules", "Wedge Sandals", "Combat Boots", "Mary Jane Pumps", "Espadrille Wedges", "Gladiator Sandals", "Chelsea Boots", "D'Orsay Pumps", "Cage Heels", "Knee-High Boots", "Slide Sandals", "Oxford Flats", "Peep Toe Heels"];
-
 const dressNames = ["Silk Midi Dress", "Velvet Gown", "Lace Cocktail Dress", "Satin Slip Dress", "Sequin Mini Dress", "Chiffon Maxi Dress", "Bodycon Dress", "A-Line Dress", "Wrap Dress", "Shirt Dress", "Pleated Dress", "Ruffle Dress", "Off-Shoulder Dress", "Halter Dress", "Blazer Dress", "Knit Dress", "Tiered Dress", "Column Dress", "Bandage Dress", "Tea Dress", "Shift Dress", "Fit Flare Dress", "Asymmetric Dress", "Cutout Dress", "Embroidered Dress"];
-
 const accessoryNames = ["Silk Scarf", "Leather Belt", "Designer Sunglasses", "Cashmere Gloves", "Pearl Hair Clip", "Luxury Watch", "Wool Hat", "Designer Wallet", "Travel Organizer", "Leather Keychain", "Phone Case", "Card Holder", "Makeup Pouch", "Passport Cover", "Jewelry Box", "Headband", "Hair Bow", "Brooch Pin", "Tie Pin", "Cufflinks Set", "Money Clip", "Valet Tray", "Umbrella", "Pocket Square", "Watch Strap"];
 
-const fragranceNames = ["Rose & Oud", "Midnight Jasmine", "Citrus Burst", "Vanilla Noir", "Ocean Breeze", "Amber Wood", "Floral Symphony", "Cedar Mystique", "Spiced Santal", "Bergamot Bloom", "Velvet Musk", "Golden Amber", "White Tea & Sage", "Black Orchid", "Neroli Portofino", "Saffron Spice", "Patchouli Intense", "Lavender Fields", "Peony Blush", "Vetiver Essence"];
 
-function createProduct(id: number, name: string, catId: string, catName: string, catSlug: string, image: string, basePrice: number): MockProduct {
+function createProductData(id, name, catId, catName, catSlug, image, basePrice) {
     const price = basePrice + Math.floor(Math.random() * 500);
     const hasDiscount = Math.random() > 0.7;
     const isNew = Math.random() > 0.6;
     const isFeatured = Math.random() > 0.7;
-
-    // Ensure slug is clean
-    const slug = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    const slug = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') + '-' + id;
 
     return {
-        _id: `prod-${id}`,
         name,
         slug,
         description: `Exquisite ${name.toLowerCase()} crafted with premium materials. Perfect for any occasion with timeless elegance and superior quality.`,
         price,
         compareAtPrice: hasDiscount ? price + Math.floor(Math.random() * 300) + 100 : undefined,
-        category: { _id: catId, name: catName, slug: catSlug },
+        category: new mongoose.Types.ObjectId(), // We will generate fresh IDs or lookup
         categoryName: catName,
         image,
         images: [image],
@@ -224,34 +189,54 @@ function createProduct(id: number, name: string, catId: string, catName: string,
     };
 }
 
-// Import men's products
-import { mockMensProducts } from './mockMensProducts';
+const seedDB = async () => {
+    try {
+        console.log('Connecting to MongoDB...');
+        // Use MONGODB_URI from .env
+        await mongoose.connect(process.env.MONGODB_URI);
+        console.log('MongoDB Connected');
 
-// Women's products
-const womensProducts: MockProduct[] = [
-    // HANDBAGS
-    ...handbagNames.map((name, i) => createProduct(i + 1, name, "cat-1", "Handbags", "handbags", handbagsImages[i], 850 + i * 80)),
+        console.log('Clearing existing products...');
+        await Product.deleteMany({});
+        console.log('Products cleared.');
 
-    // JEWELRY
-    ...jewelryNames.map((name, i) => createProduct(i + 26, name, "cat-2", "Jewelry", "jewelry", jewelryImages[i], 1200 + i * 150)),
+        const products = [];
 
-    // SHOES
-    ...shoeNames.map((name, i) => createProduct(i + 51, name, "cat-3", "Shoes", "shoes", shoesImages[i], 395 + i * 40)),
+        // Women's Handbags
+        handbagNames.forEach((name, i) => {
+            products.push(createProductData(i + 1, name, "cat-1", "Handbags", "handbags", handbagsImages[i], 850 + i * 80));
+        });
 
-    // DRESSES
-    ...dressNames.map((name, i) => createProduct(i + 76, name, "cat-4", "Dresses", "dresses", dressesImages[i], 450 + i * 60)),
+        // Jewelry
+        jewelryNames.forEach((name, i) => {
+            products.push(createProductData(i + 26, name, "cat-2", "Jewelry", "jewelry", jewelryImages[i], 1200 + i * 150));
+        });
 
-    // ACCESSORIES
-    ...accessoryNames.map((name, i) => createProduct(i + 101, name, "cat-5", "Accessories", "accessories", accessoriesImages[i], 150 + i * 50)),
+        // Shoes
+        shoeNames.forEach((name, i) => {
+            products.push(createProductData(i + 51, name, "cat-3", "Shoes", "shoes", shoesImages[i], 395 + i * 40));
+        });
 
-    // FRAGRANCES
-    ...fragranceNames.map((name, i) => createProduct(i + 126, name, "cat-11", "Fragrances", "fragrances", fragranceImages[i], 120 + i * 40))
-];
+        // Dresses
+        dressNames.forEach((name, i) => {
+            products.push(createProductData(i + 76, name, "cat-4", "Dresses", "dresses", dressesImages[i], 450 + i * 60));
+        });
 
-// Combined products (Women's + Men's)
-export const mockProducts: MockProduct[] = [
-    ...womensProducts,
-    ...mockMensProducts as unknown as MockProduct[]
-];
+        // Accessories
+        accessoryNames.forEach((name, i) => {
+            products.push(createProductData(i + 101, name, "cat-5", "Accessories", "accessories", accessoriesImages[i], 150 + i * 50));
+        });
 
-export default mockProducts;
+        console.log(`Prepared ${products.length} products to insert.`);
+
+        await Product.insertMany(products);
+        console.log('Data Imported Successfully!');
+
+        process.exit();
+    } catch (error) {
+        console.error('Error importing data:', error);
+        process.exit(1);
+    }
+};
+
+seedDB();

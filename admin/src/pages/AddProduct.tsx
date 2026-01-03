@@ -33,7 +33,7 @@ const AddProduct = ({ onClose, onSuccess, initialData }: AddProductProps) => {
         }
     }, [initialData]);
 
-    const categories = ['Handbags', 'Jewelry', 'Shoes', 'Dresses', 'Accessories', 'Men\'s Watches', 'Men\'s Bags', 'Men\'s Shoes', 'Men\'s Suits', 'Men\'s Accessories'];
+    const categories = ['Handbags', 'Jewelry', 'Shoes', 'Dresses', 'Accessories', 'Men\'s Watches', 'Men\'s Bags', 'Men\'s Shoes', 'Men\'s Suits', 'Men\'s Accessories', 'Fragrances'];
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

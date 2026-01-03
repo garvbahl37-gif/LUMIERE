@@ -110,7 +110,7 @@ const Header = () => {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-8">
+            <nav className="hidden lg:flex items-center gap-8 ml-16">
               {navLinks.map((link) => (
                 <div
                   key={link.name}
@@ -202,10 +202,10 @@ const Header = () => {
             </nav>
 
             {/* Right actions */}
-            <div className="flex items-center gap-2 lg:gap-6">
+            <div className="flex items-center gap-2 lg:gap-6 pl-10">
               {/* Desktop Search */}
               {isSearchOpen ? (
-                <div className="hidden lg:block relative">
+                <div className="hidden lg:block relative mr-10">
                   <SearchAutocomplete onClose={() => setIsSearchOpen(false)} />
                   <button
                     onClick={() => setIsSearchOpen(false)}

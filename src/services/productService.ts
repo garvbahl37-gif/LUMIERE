@@ -193,6 +193,47 @@ export const productService = {
             success: true,
             data: filtered as Product[]
         };
+    },
+    async updateProduct(id: string, productData: Partial<Product>): Promise<{ success: boolean; data: Product }> {
+        const index = mockProducts.findIndex(p => p._id === id);
+        if (index === -1) throw new Error('Product not found');
+
+        const updatedProduct = { ...mockProducts[index], ...productData };
+        mockProducts[index] = updatedProduct;
+
+        return {
+            success: true,
+            data: updatedProduct
+        };
+    },
+
+    async deleteProduct(id: string): Promise<{ success: boolean }> {
+        const index = mockProducts.findIndex(p => p._id === id);
+        if (index === -1) throw new Error('Product not found');
+
+        mockProducts.splice(index, 1);
+        return { success: true };
+    },
+
+    async getSimilarProducts(productId: string, limit = 4): Promise<ProductsResponse> {
+        const currentProduct = mockProducts.find(p => p._id === productId);
+        if (!currentProduct) return { success: false, data: [] };
+
+        // Filter by same category or gender, excluding current product
+        const similar = mockProducts.filter(p =>
+            p._id !== productId &&
+            (p.category._id === currentProduct.category._id || p.categoryName === currentProduct.categoryName) &&
+            // Try to match gender if possible (heuristic based on category name)
+            (
+                (currentProduct.categoryName.toLowerCase().includes('men') && p.categoryName.toLowerCase().includes('men')) ||
+                (!currentProduct.categoryName.toLowerCase().includes('men') && !p.categoryName.toLowerCase().includes('men'))
+            )
+        ).slice(0, limit);
+
+        return {
+            success: true,
+            data: similar
+        };
     }
 };
 

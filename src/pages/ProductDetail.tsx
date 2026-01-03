@@ -9,6 +9,34 @@ import { useWishlist } from "@/context/WishlistContext";
 import { Minus, Plus, ShoppingBag, Star, Heart, Share2, ChevronLeft, Truck, RotateCcw, Shield, Package } from "lucide-react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion";
+
+const fadeInUp = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+            duration: 0.6,
+            ease: "easeOut" as const
+        }
+    }
+};
+
+const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.1
+        }
+    }
+};
 
 
 const ProductDetail = () => {
@@ -17,6 +45,7 @@ const ProductDetail = () => {
     const { addToCart } = useCart();
     const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
     const [product, setProduct] = useState<Product | null>(null);
+    const [similarProducts, setSimilarProducts] = useState<Product[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [quantity, setQuantity] = useState(1);
     const [selectedImage, setSelectedImage] = useState(0);
@@ -45,6 +74,11 @@ const ProductDetail = () => {
             const response = await productService.getProduct(id);
             if (response.success) {
                 setProduct(response.data);
+                // Fetch similar products
+                const similarResponse = await productService.getSimilarProducts(id);
+                if (similarResponse.success) {
+                    setSimilarProducts(similarResponse.data);
+                }
             }
         } catch (error) {
             console.error("Failed to fetch product:", error);
@@ -167,7 +201,7 @@ const ProductDetail = () => {
                                 className="aspect-square overflow-hidden rounded-2xl bg-secondary/30"
                             >
                                 <img
-                                    src={images[selectedImage].startsWith('/') ? `http://localhost:5173${images[selectedImage]}` : images[selectedImage]}
+                                    src={images[selectedImage]}
                                     alt={product.name}
                                     className="w-full h-full object-cover"
                                 />
@@ -186,7 +220,7 @@ const ProductDetail = () => {
                                                 }`}
                                         >
                                             <img
-                                                src={img.startsWith('/') ? `http://localhost:5173${img}` : img}
+                                                src={img}
                                                 alt={`${product.name} ${index + 1}`}
                                                 className="w-full h-full object-cover"
                                             />
@@ -198,158 +232,217 @@ const ProductDetail = () => {
 
                         {/* Details */}
                         <div className="lg:sticky lg:top-28 lg:self-start">
-                            <div className="space-y-5 lg:space-y-6">
+                            <motion.div
+                                className="space-y-5 lg:space-y-6"
+                                variants={staggerContainer}
+                                initial="hidden"
+                                animate="visible"
+                            >
                                 {/* Category & Badges */}
-                                <div className="flex items-center gap-2 flex-wrap">
-                                    <span className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
+                                <motion.div variants={fadeInUp} className="flex items-center gap-3 flex-wrap mb-2">
+                                    <span className="text-xs uppercase tracking-[0.2em] text-neutral-500 font-medium">
                                         {product.categoryName}
                                     </span>
                                     {product.isNew && (
-                                        <span className="text-[10px] uppercase tracking-widest bg-accent text-accent-foreground px-2 py-0.5 rounded-full font-semibold">
-                                            New
+                                        <span className="text-[10px] uppercase tracking-widest bg-neutral-900 text-white px-2 py-0.5 rounded-sm font-medium">
+                                            New Arrival
                                         </span>
                                     )}
                                     {discount > 0 && (
-                                        <span className="text-[10px] uppercase tracking-widest bg-red-500 text-white px-2 py-0.5 rounded-full font-semibold">
-                                            -{discount}% OFF
+                                        <span className="text-[10px] uppercase tracking-widest bg-rose-500 text-white px-2 py-0.5 rounded-sm font-medium">
+                                            Save {discount}%
                                         </span>
                                     )}
-                                </div>
+                                </motion.div>
 
                                 {/* Name */}
-                                <h1 className="font-display text-2xl lg:text-4xl leading-tight">{product.name}</h1>
+                                <motion.h1 variants={fadeInUp} className="font-display text-3xl lg:text-5xl text-neutral-900 leading-[1.1] mb-2">
+                                    {product.name}
+                                </motion.h1>
 
                                 {/* Rating */}
-                                <div className="flex items-center gap-3">
-                                    <div className="flex items-center gap-1">
+                                <motion.div variants={fadeInUp} className="flex items-center gap-4 text-sm">
+                                    <div className="flex items-center gap-0.5">
                                         {[...Array(5)].map((_, i) => (
                                             <Star
                                                 key={i}
-                                                size={16}
+                                                size={14}
                                                 className={i < Math.floor(product.rating)
                                                     ? 'fill-amber-400 text-amber-400'
-                                                    : 'text-muted-foreground/30'
+                                                    : 'text-neutral-200'
                                                 }
                                             />
                                         ))}
                                     </div>
-                                    <span className="text-sm text-muted-foreground">
-                                        {product.rating.toFixed(1)} · {product.numReviews} reviews
+                                    <span className="text-neutral-500 border-b border-neutral-200 pb-0.5">
+                                        {product.rating.toFixed(1)} <span className="mx-1">·</span> {product.numReviews} reviews
                                     </span>
-                                </div>
+                                </motion.div>
 
                                 {/* Price */}
-                                <div className="flex items-baseline gap-3">
-                                    <span className="text-3xl lg:text-4xl font-display">${product.price.toLocaleString()}</span>
+                                <motion.div variants={fadeInUp} className="flex items-baseline gap-4 py-4 border-b border-neutral-100">
+                                    <span className="text-4xl lg:text-5xl font-light text-neutral-900 font-display">
+                                        ${product.price.toLocaleString()}
+                                    </span>
                                     {product.compareAtPrice > product.price && (
-                                        <span className="text-lg text-muted-foreground line-through">
-                                            ${product.compareAtPrice.toLocaleString()}
-                                        </span>
+                                        <div className="flex flex-col items-start">
+                                            <span className="text-lg text-neutral-400 line-through decoration-neutral-300">
+                                                ${product.compareAtPrice.toLocaleString()}
+                                            </span>
+                                        </div>
                                     )}
-                                </div>
+                                </motion.div>
 
                                 {/* Description */}
-                                <p className="text-muted-foreground leading-relaxed text-sm lg:text-base">
+                                <motion.p variants={fadeInUp} className="text-neutral-600 leading-relaxed text-base font-light max-w-xl">
                                     {product.description}
-                                </p>
+                                </motion.p>
 
                                 {/* Stock Status */}
-                                <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium ${product.stock > 5
-                                    ? 'bg-green-500/10 text-green-600'
-                                    : product.stock > 0
-                                        ? 'bg-amber-500/10 text-amber-600'
-                                        : 'bg-red-500/10 text-red-600'
-                                    }`}>
-                                    <span className={`w-2 h-2 rounded-full ${product.stock > 5 ? 'bg-green-500' : product.stock > 0 ? 'bg-amber-500' : 'bg-red-500'
+                                <motion.div variants={fadeInUp} className="flex items-center gap-2">
+                                    <div className={`w-2 h-2 rounded-full ${product.stock > 5 ? 'bg-emerald-500' : product.stock > 0 ? 'bg-amber-500' : 'bg-rose-500'
                                         }`} />
-                                    {product.stock > 5
-                                        ? `${product.stock} in stock`
-                                        : product.stock > 0
-                                            ? `Only ${product.stock} left!`
-                                            : 'Out of stock'
-                                    }
-                                </div>
+                                    <span className="text-sm font-medium text-neutral-600">
+                                        {product.stock > 5
+                                            ? 'In stock and ready to ship'
+                                            : product.stock > 0
+                                                ? `Low stock - Only ${product.stock} left`
+                                                : 'Currently unavailable'}
+                                    </span>
+                                </motion.div>
 
-                                {/* Quantity Selector - Desktop */}
-                                <div className="hidden lg:flex items-center gap-4">
-                                    <span className="text-sm font-medium">Quantity</span>
-                                    <div className="flex items-center border border-border rounded-xl overflow-hidden">
-                                        <button
-                                            onClick={decrementQuantity}
-                                            className="p-3 hover:bg-secondary transition-colors disabled:opacity-50"
-                                            disabled={quantity <= 1}
-                                        >
-                                            <Minus size={16} />
-                                        </button>
-                                        <span className="w-14 text-center font-medium">{quantity}</span>
-                                        <button
-                                            onClick={incrementQuantity}
-                                            className="p-3 hover:bg-secondary transition-colors disabled:opacity-50"
-                                            disabled={quantity >= product.stock}
-                                        >
-                                            <Plus size={16} />
-                                        </button>
+                                {/* Quantity & Actions */}
+                                <motion.div variants={fadeInUp} className="space-y-6 pt-6 border-t border-neutral-100">
+                                    <div className="flex items-center justify-between max-w-sm">
+                                        <span className="text-sm font-medium text-neutral-900 uppercase tracking-widest">Quantity</span>
+                                        <div className="flex items-center border border-neutral-200 rounded-lg">
+                                            <button
+                                                onClick={decrementQuantity}
+                                                className="w-10 h-10 flex items-center justify-center hover:bg-neutral-50 transition-colors disabled:opacity-50 text-neutral-600"
+                                                disabled={quantity <= 1}
+                                            >
+                                                <Minus size={14} />
+                                            </button>
+                                            <span className="w-12 text-center font-medium text-neutral-900">{quantity}</span>
+                                            <button
+                                                onClick={incrementQuantity}
+                                                className="w-10 h-10 flex items-center justify-center hover:bg-neutral-50 transition-colors disabled:opacity-50 text-neutral-600"
+                                                disabled={quantity >= product.stock}
+                                            >
+                                                <Plus size={14} />
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
 
-                                {/* Actions - Desktop */}
-                                <div className="hidden lg:flex gap-3">
-                                    <Button
-                                        size="lg"
-                                        className="flex-1 h-14 rounded-xl text-base font-medium"
-                                        onClick={handleAddToCart}
-                                        disabled={product.stock === 0}
-                                    >
-                                        <ShoppingBag size={20} className="mr-2" />
-                                        Add to Bag
-                                    </Button>
-                                    <Button
-                                        variant={isInWishlist(product._id) ? "default" : "outline"}
-                                        size="icon"
-                                        className="w-14 h-14 rounded-xl"
-                                        onClick={() => {
-                                            if (isInWishlist(product._id)) {
-                                                removeFromWishlist(product._id);
-                                            } else {
-                                                addToWishlist(product._id);
-                                            }
-                                        }}
-                                    >
-                                        <Heart size={20} fill={isInWishlist(product._id) ? "currentColor" : "none"} />
-                                    </Button>
-                                    <Button
-                                        variant="outline"
-                                        size="icon"
-                                        className="w-14 h-14 rounded-xl"
-                                        onClick={handleShare}
-                                    >
-                                        <Share2 size={20} />
-                                    </Button>
-                                </div>
+                                    <div className="flex gap-4">
+                                        <Button
+                                            size="lg"
+                                            className="flex-1 h-14 rounded-none bg-neutral-900 hover:bg-neutral-800 text-white text-sm uppercase tracking-[0.1em] transition-all duration-300"
+                                            onClick={handleAddToCart}
+                                            disabled={product.stock === 0}
+                                        >
+                                            <ShoppingBag size={18} className="mr-3" />
+                                            {product.stock === 0 ? 'Out of Stock' : 'Add to Bag'}
+                                        </Button>
+                                        <Button
+                                            variant="outline"
+                                            size="icon"
+                                            className="w-14 h-14 rounded-none border-neutral-200 hover:border-neutral-900 hover:bg-transparent transition-all duration-300"
+                                            onClick={() => {
+                                                if (isInWishlist(product._id)) {
+                                                    removeFromWishlist(product._id);
+                                                } else {
+                                                    addToWishlist(product._id);
+                                                }
+                                            }}
+                                        >
+                                            <Heart size={20} fill={isInWishlist(product._id) ? "currentColor" : "none"} className={isInWishlist(product._id) ? "text-rose-500" : "text-neutral-900"} />
+                                        </Button>
+                                        <Button
+                                            variant="outline"
+                                            size="icon"
+                                            className="w-14 h-14 rounded-none border-neutral-200 hover:border-neutral-900 hover:bg-transparent transition-all duration-300"
+                                            onClick={handleShare}
+                                        >
+                                            <Share2 size={20} className="text-neutral-900" />
+                                        </Button>
+                                    </div>
+                                </motion.div>
 
                                 {/* Features */}
-                                <div className="grid grid-cols-2 gap-3 pt-4 border-t border-border">
-                                    <div className="flex items-center gap-3 p-3 rounded-xl bg-secondary/30">
-                                        <Truck size={18} className="text-accent" />
-                                        <span className="text-xs font-medium">Free Shipping</span>
+                                <motion.div variants={fadeInUp} className="grid grid-cols-2 gap-4 pt-8">
+                                    <div className="flex items-start gap-4 p-4 rounded-lg bg-neutral-50 hover:bg-neutral-100 transition-colors">
+                                        <Truck size={20} className="text-neutral-900 mt-0.5" />
+                                        <div>
+                                            <h4 className="text-sm font-medium text-neutral-900 mb-1">Free Shipping</h4>
+                                            <p className="text-xs text-neutral-500">On all orders over $200</p>
+                                        </div>
                                     </div>
-                                    <div className="flex items-center gap-3 p-3 rounded-xl bg-secondary/30">
-                                        <RotateCcw size={18} className="text-accent" />
-                                        <span className="text-xs font-medium">30-Day Returns</span>
+                                    <div className="flex items-start gap-4 p-4 rounded-lg bg-neutral-50 hover:bg-neutral-100 transition-colors">
+                                        <RotateCcw size={20} className="text-neutral-900 mt-0.5" />
+                                        <div>
+                                            <h4 className="text-sm font-medium text-neutral-900 mb-1">30-Day Returns</h4>
+                                            <p className="text-xs text-neutral-500">Easy returns policy</p>
+                                        </div>
                                     </div>
-                                    <div className="flex items-center gap-3 p-3 rounded-xl bg-secondary/30">
-                                        <Shield size={18} className="text-accent" />
-                                        <span className="text-xs font-medium">Secure Payment</span>
+                                    <div className="flex items-start gap-4 p-4 rounded-lg bg-neutral-50 hover:bg-neutral-100 transition-colors">
+                                        <Shield size={20} className="text-neutral-900 mt-0.5" />
+                                        <div>
+                                            <h4 className="text-sm font-medium text-neutral-900 mb-1">Secure Payment</h4>
+                                            <p className="text-xs text-neutral-500">Encrypted transactions</p>
+                                        </div>
                                     </div>
-                                    <div className="flex items-center gap-3 p-3 rounded-xl bg-secondary/30">
-                                        <Package size={18} className="text-accent" />
-                                        <span className="text-xs font-medium">Premium Quality</span>
+                                    <div className="flex items-start gap-4 p-4 rounded-lg bg-neutral-50 hover:bg-neutral-100 transition-colors">
+                                        <Package size={20} className="text-neutral-900 mt-0.5" />
+                                        <div>
+                                            <h4 className="text-sm font-medium text-neutral-900 mb-1">Premium Quality</h4>
+                                            <p className="text-xs text-neutral-500">Certified authentic</p>
+                                        </div>
                                     </div>
-                                </div>
+                                </motion.div>
+
+                                {/* Product Details Accordion */}
+                                <motion.div variants={fadeInUp} className="pt-8">
+                                    <Accordion type="single" collapsible className="w-full">
+                                        <AccordionItem value="description" className="border-neutral-200">
+                                            <AccordionTrigger className="font-display text-neutral-900 hover:text-neutral-700 hover:no-underline">
+                                                Description
+                                            </AccordionTrigger>
+                                            <AccordionContent className="text-neutral-600 leading-relaxed font-light">
+                                                {product.description}
+                                                <p className="mt-4">
+                                                    Crafted with attention to detail, this piece matches the modern aesthetic of specialized luxury. Perfect for those who appreciate the finer things.
+                                                </p>
+                                            </AccordionContent>
+                                        </AccordionItem>
+                                        <AccordionItem value="shipping" className="border-neutral-200">
+                                            <AccordionTrigger className="font-display text-neutral-900 hover:text-neutral-700 hover:no-underline">
+                                                Shipping & Returns
+                                            </AccordionTrigger>
+                                            <AccordionContent className="text-neutral-600 leading-relaxed font-light">
+                                                <p className="mb-2"><strong>Free Standard Shipping:</strong> 3-5 business days.</p>
+                                                <p><strong>Express Shipping:</strong> Available at checkout.</p>
+                                                <p className="mt-2">Returns accepted within 30 days of delivery. Items must be unworn and in original packaging.</p>
+                                            </AccordionContent>
+                                        </AccordionItem>
+                                        <AccordionItem value="care" className="border-b-0 border-neutral-200">
+                                            <AccordionTrigger className="font-display text-neutral-900 hover:text-neutral-700 hover:no-underline">
+                                                Care Guide
+                                            </AccordionTrigger>
+                                            <AccordionContent className="text-neutral-600 leading-relaxed font-light">
+                                                <ul className="list-disc pl-4 space-y-1">
+                                                    <li>Keep away from direct sunlight and heat.</li>
+                                                    <li>Clean with a soft, dry cloth.</li>
+                                                    <li>Store in the provided dust bag when not in use.</li>
+                                                </ul>
+                                            </AccordionContent>
+                                        </AccordionItem>
+                                    </Accordion>
+                                </motion.div>
 
                                 {/* Tags */}
                                 {product.tags.length > 0 && (
-                                    <div className="pt-4 border-t border-border">
+                                    <motion.div variants={fadeInUp} className="pt-4 border-t border-border">
                                         <span className="text-xs font-medium text-muted-foreground mr-3">Tags:</span>
                                         <div className="inline-flex flex-wrap gap-2 mt-2">
                                             {product.tags.map((tag) => (
@@ -362,12 +455,50 @@ const ProductDetail = () => {
                                                 </Link>
                                             ))}
                                         </div>
-                                    </div>
+                                    </motion.div>
                                 )}
-                            </div>
+                            </motion.div>
                         </div>
                     </div>
                 </div>
+                {/* Similar Products Section */}
+                {similarProducts.length > 0 && (
+                    <section className="py-24 border-t border-neutral-100">
+                        <div className="container mx-auto px-4 lg:px-8">
+                            <div className="text-center mb-16">
+                                <h2 className="font-display text-3xl md:text-4xl text-neutral-900 mb-4">Curated For You</h2>
+                                <div className="w-24 h-px bg-neutral-200 mx-auto" />
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
+                                {similarProducts.map((product, index) => (
+                                    <motion.div
+                                        key={product._id}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true }}
+                                        transition={{ duration: 0.5, delay: index * 0.1 }}
+                                    >
+                                        <Link to={`/product/${product._id}`} className="block group">
+                                            <div className="aspect-[3/4] overflow-hidden bg-neutral-100 mb-4 relative">
+                                                <img
+                                                    src={product.image.startsWith('/') ? `http://localhost:5173${product.image}` : product.image}
+                                                    alt={product.name}
+                                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                                />
+                                                {product.isNew && (
+                                                    <span className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm text-[10px] uppercase tracking-widest px-2 py-1">New</span>
+                                                )}
+                                            </div>
+                                            <h3 className="font-display text-lg mb-1">{product.name}</h3>
+                                            <p className="text-sm text-neutral-500">${product.price.toLocaleString()}</p>
+                                        </Link>
+                                    </motion.div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+                )}
             </main>
 
             {/* Mobile Sticky Bottom Bar */}

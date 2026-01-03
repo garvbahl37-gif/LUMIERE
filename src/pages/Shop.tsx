@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider";
 import { productService, Product } from "@/services/productService";
 import { categoryService, Category } from "@/services/categoryService";
+import { AnimatePresence, motion } from "framer-motion";
 import { Search, Filter, X } from "lucide-react";
 
 const Shop = () => {
@@ -348,7 +349,12 @@ const Shop = () => {
                             </aside>
 
                             {/* Products Grid - Using CollectionGrid */}
-                            <div className="flex-1">
+                            <motion.div
+                                className="flex-1"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5, ease: "easeOut" }}
+                            >
                                 <CollectionGrid products={products} isLoading={isLoading} />
 
                                 {/* Pagination */}
@@ -366,7 +372,7 @@ const Shop = () => {
                                         ))}
                                     </div>
                                 )}
-                            </div>
+                            </motion.div>
                         </div>
                     </div>
                 </section>

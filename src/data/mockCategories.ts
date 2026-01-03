@@ -103,6 +103,15 @@ export const mockCategories: Category[] = [
         heroImage: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=1920",
         gender: "men"
     },
+    {
+        _id: "cat-11",
+        name: "Fragrances",
+        slug: "fragrances",
+        description: "Captivating scents for every personality",
+        image: "https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=800&auto=format&fit=crop",
+        heroImage: "https://images.unsplash.com/photo-1615160737976-4d3752697b0a?q=80&w=1920&auto=format&fit=crop",
+        gender: "unisex"
+    },
 ];
 
 export default mockCategories;
