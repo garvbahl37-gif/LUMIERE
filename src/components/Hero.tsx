@@ -99,7 +99,7 @@ const Hero = () => {
   const prevSlide = () => changeSlide((activeSlide - 1 + slides.length) % slides.length);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
       {/* Background images with smooth crossfade transition */}
       {slides.map((slide, index) => (
         <div
@@ -234,15 +234,15 @@ const Hero = () => {
 
           {/* Main heading with smooth transition */}
           <h1
-            className="font-display text-5xl md:text-7xl lg:text-8xl xl:text-9xl leading-[0.9] mb-8"
+            className="font-display text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-tight mb-8"
             style={{
               opacity: isTransitioning ? 0 : 1,
               transform: isTransitioning ? 'translateY(20px)' : 'translateY(0)',
               transition: 'opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.05s, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.05s',
             }}
           >
-            <span className="block text-white drop-shadow-lg">{currentSlide.title}</span>
-            <span className="relative block mt-3">
+            <span className="text-white drop-shadow-lg mr-4">{currentSlide.title}</span>
+            <span className="relative inline-block">
               {/* Golden gradient text with glow */}
               <span
                 className="bg-clip-text text-transparent italic drop-shadow-lg"

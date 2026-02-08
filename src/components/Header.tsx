@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
-import { Menu, Search, ShoppingBag, Heart, X, ChevronDown, Sparkles, Tag, Package, Home, Truck, ClipboardList, Bell } from "lucide-react";
+import { SignedIn, SignedOut, useUser } from "@clerk/clerk-react";
+import { Menu, Search, ShoppingBag, Heart, X, ChevronDown, Sparkles, Tag, Package, Home, Truck, ClipboardList, Bell, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
@@ -13,6 +13,7 @@ const Header = () => {
   const location = useLocation();
   const { totalItems } = useCart();
   const { items: wishlistItems } = useWishlist();
+  const { user } = useUser();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isWomenDropdownOpen, setIsWomenDropdownOpen] = useState(false);
@@ -38,13 +39,21 @@ const Header = () => {
     { name: "Accessories", slug: "mens-accessories" },
   ];
 
-  const navLinks = [
-    { name: "Home", href: "/", icon: <Home size={14} /> },
+  interface NavLink {
+    name: string;
+    href: string;
+    hasDropdown?: boolean;
+    dropdownType?: string;
+    highlight?: boolean;
+    isHash?: boolean;
+    icon?: React.ReactNode;
+  }
+
+  const navLinks: NavLink[] = [
     { name: "Women", href: "/shop?gender=women", hasDropdown: true, dropdownType: "women" },
     { name: "Men", href: "/shop?gender=men", hasDropdown: true, dropdownType: "men" },
     { name: "New Arrivals", href: "/shop?isNew=true" },
     { name: "Sale", href: "/shop?sale=true", highlight: true },
-    { name: "About", href: "/#about", isHash: true },
   ];
 
   // Handle scroll effect
@@ -191,14 +200,6 @@ const Header = () => {
                   )}
                 </div>
               ))}
-
-              {/* Track Order - Desktop */}
-              <button
-                onClick={() => setIsTrackOrderOpen(true)}
-                className="flex items-center gap-1.5 font-display font-semibold text-sm tracking-widest uppercase text-foreground/80 hover:text-accent transition-all cursor-pointer hover:-translate-y-0.5"
-              >
-                Track Order
-              </button>
             </nav>
 
             {/* Right actions */}
@@ -256,20 +257,15 @@ const Header = () => {
                 </Button>
               </Link>
 
-              {/* User Menu - Clerk Integration */}
+              {/* User Menu - Custom Profile Link */}
               <SignedIn>
-                <UserButton
-                  appearance={{
-                    elements: {
-                      avatarBox: "w-9 h-9",
-                      userButtonPopoverCard: "bg-background border border-border shadow-xl",
-                      userButtonPopoverActionButton: "hover:bg-secondary",
-                      userButtonPopoverActionButtonText: "text-foreground",
-                      userButtonPopoverFooter: "hidden",
-                    }
-                  }}
-                  afterSignOutUrl="/"
-                />
+                <Link to="/profile" className="block w-9 h-9 rounded-full overflow-hidden border border-border hover:opacity-80 transition-opacity">
+                  <img
+                    src={user?.imageUrl}
+                    alt={user?.fullName || "User Profile"}
+                    className="w-full h-full object-cover"
+                  />
+                </Link>
               </SignedIn>
               <SignedOut>
                 <Link to="/sign-in" className="hidden lg:block">
@@ -362,20 +358,10 @@ const Header = () => {
               <div className="py-2 border-t border-border">
                 <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3 text-center">Quick Actions</p>
                 <div className="grid grid-cols-2 gap-2">
-                  <button
-                    onClick={() => {
-                      setIsTrackOrderOpen(true);
-                      setIsMenuOpen(false);
-                    }}
-                    className="flex items-center justify-center gap-2 p-3 bg-accent/10 hover:bg-accent/20 rounded-xl transition-colors text-accent"
-                  >
-                    <Truck size={16} />
-                    <span className="text-sm font-medium">Track Order</span>
-                  </button>
                   <Link
                     to="/wishlist"
                     onClick={() => setIsMenuOpen(false)}
-                    className="flex items-center justify-center gap-2 p-3 bg-secondary/30 hover:bg-secondary/50 rounded-xl transition-colors"
+                    className="flex items-center justify-center gap-2 p-3 bg-secondary/30 hover:bg-secondary/50 rounded-xl transition-colors col-span-2"
                   >
                     <Heart size={16} />
                     <span className="text-sm font-medium">Wishlist</span>
@@ -406,10 +392,10 @@ const Header = () => {
               {/* Account Actions */}
               <div className="flex items-center gap-3 pt-4 border-t border-border mt-2">
                 <SignedIn>
-                  <Link to="/orders" onClick={() => setIsMenuOpen(false)} className="flex-1">
+                  <Link to="/profile" onClick={() => setIsMenuOpen(false)} className="flex-1">
                     <Button variant="outline" size="sm" className="w-full">
-                      <ClipboardList size={16} className="mr-2" />
-                      My Orders
+                      <User size={16} className="mr-2" />
+                      My Profile
                     </Button>
                   </Link>
                 </SignedIn>

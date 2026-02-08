@@ -22,10 +22,10 @@ const Categories = () => {
           <span className="uppercase tracking-[0.3em] text-[#8c7a6b] text-xs font-semibold">
             Curated Collections
           </span>
-          <h2 className="font-display text-4xl lg:text-5xl xl:text-6xl text-[#2c2c2c]">
-            Discover Your <span className="italic font-serif text-[#d4a574]">Signature</span>
+          <h2 className="font-display text-4xl lg:text-5xl xl:text-6xl text-neutral-900">
+            Discover Your <span className="italic font-light text-rose-900">Signature</span>
           </h2>
-          <div className="w-20 h-px bg-[#d4a574]/40 mt-4"></div>
+          <div className="w-20 h-px bg-rose-400/40 mt-4"></div>
         </div>
 
         {/* Bento Grid */}

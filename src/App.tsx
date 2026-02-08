@@ -23,6 +23,7 @@ import Orders from "./pages/Orders";
 import Wishlist from "./pages/Wishlist";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
+import Profile from "./pages/Profile";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +45,7 @@ const AnimatedRoutes = () => {
         <Route path="/wishlist" element={<PageTransition><Wishlist /></PageTransition>} />
         <Route path="/sign-in/*" element={<PageTransition><SignIn /></PageTransition>} />
         <Route path="/sign-up/*" element={<PageTransition><SignUp /></PageTransition>} />
+        <Route path="/profile" element={<PageTransition><Profile /></PageTransition>} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
       </Routes>
