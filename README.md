@@ -1,73 +1,99 @@
-# Welcome to your Lovable project
 
-## Project info
+# LUMIERE - Premium E-Commerce Platform
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+LUMIERE is a modern, high-end e-commerce platform designed for a premium shopping experience. It features a responsive storefront, a comprehensive admin dashboard, a robust backend API, and a mobile application.
 
-## How can I edit this code?
+## 🚀 Tech Stack
 
-There are several ways of editing your application.
+### Frontend (Storefront)
+-   **Framework**: [React](https://react.dev/) with [Vite](https://vitejs.dev/)
+-   **Language**: TypeScript
+-   **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+-   **UI Components**: [shadcn/ui](https://ui.shadcn.com/)
+-   **Icons**: [Lucide React](https://lucide.dev/)
+-   **Animations**: [Framer Motion](https://www.framer.com/motion/)
+-   **State Management**: React Context API
+-   **Authentication**: [Clerk](https://clerk.com/)
+-   **Routing**: React Router DOM
 
-**Use Lovable**
+### Backend (API)
+-   **Runtime**: [Node.js](https://nodejs.org/)
+-   **Framework**: [Express.js](https://expressjs.com/)
+-   **Database**: [MongoDB](https://www.mongodb.com/) with Mongoose
+-   **Authentication**: JWT & Clerk Integration
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+### Admin Panel
+-   **Framework**: React
+-   **Language**: TypeScript
+-   **Styling**: Tailwind CSS
+-   **Features**: Product Management, Order Tracking, Analytics
 
-Changes made via Lovable will be committed automatically to this repo.
+### Mobile App
+-   **Framework**: [React Native](https://reactnative.dev/) (likely Expo)
+-   **Language**: TypeScript/JavaScript
 
-**Use your preferred IDE**
+## 📂 Project Structure
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```
+LUMIERE/
+├── src/                # Frontend Request (Storefront) Source Code
+│   ├── components/     # Reusable UI components (Header, Hero, ProductCard, etc.)
+│   ├── pages/          # Application pages (Home, Shop, ProductDetail, Profile, etc.)
+│   ├── context/        # Global state (Auth, Cart, Wishlist)
+│   ├── services/       # API integration services
+│   └── lib/            # Utilities and helper functions
+├── server/             # Backend API Source Code
+│   ├── controllers/    # Route logic
+│   ├── models/         # Database schemas
+│   ├── routes/         # API endpoints
+│   └── middleware/     # Auth and error handling middleware
+├── admin/              # Admin Dashboard Source Code
+├── mobile/             # Mobile Application Source Code
+└── public/             # Static assets (images, icons)
 ```
 
-**Edit a file directly in GitHub**
+## ✨ Key Features
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+-   **User Authentication**: Secure sign-up/sign-in using Clerk.
+-   **Product Discovery**: diverse categories, search functionality, and detailed product pages.
+-   **Shopping Experience**: Full-featured cart, wishlist, and checkout process.
+-   **Order Management**: User profile with order history and detailed order usage.
+-   **Admin Dashboard**: comprehensive tools for managing products, orders, and viewing sales analytics.
+-   **Mobile Experience**: Dedicated mobile app for on-the-go shopping.
+-   **Responsive Design**: Fully responsive UI ensuring a seamless experience across all devices.
 
-**Use GitHub Codespaces**
+## 🛠️ Getting Started
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Prerequisites
+-   Node.js (v16+)
+-   npm or yarn
+-   MongoDB instance
 
-## What technologies are used for this project?
+### Installation
 
-This project is built with:
+1.  **Clone the repository**
+    ```bash
+    git clone https://github.com/garvbahl37-gif/LUMIERE.git
+    cd LUMIERE
+    ```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+2.  **Install Dependencies**
+    ```bash
+    npm install
+    # Install server dependencies
+    cd server && npm install
+    # Install admin dependencies
+    cd ../admin && npm install
+    ```
 
-## How can I deploy this project?
+3.  **Environment Setup**
+    -   Create `.env` files in `root`, `server`, and `admin` directories with necessary API keys (Clerk, MongoDB URI, etc.).
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+4.  **Run the Application**
+    -   **Frontend**: `npm run dev`
+    -   **Backend**: `cd server && npm start` (or `npm run dev`)
+    -   **Admin**: `cd admin && npm run dev`
 
-## Can I connect a custom domain to my Lovable project?
+## 🤝 Contributing
 
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Contributions are welcome! Please fork the repository and submit a pull request for any enhancements or bug fixes.
