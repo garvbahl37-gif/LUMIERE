@@ -6,15 +6,6 @@ LUMIERE is a modern, high-end e-commerce platform designed for a premium shoppin
 ## 🔗 Live Links
 
 -   **Admin Panel**: [https://lumiere-admin.vercel.app/login](https://lumiere-admin.vercel.app/login)
--   **Storefront**: [Link to Storefront (if available)](https://lumiere-store.vercel.app) *(Replace with actual link)*
-
-## 📸 Screenshots
-
-### Home Page
-![Home Page](screenshots/home_page.png)
-
-### Admin Panel
-![Admin Panel](screenshots/admin_panel.png)
 
 ## 🚀 Tech Stack
 
