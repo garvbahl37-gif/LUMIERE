@@ -3,6 +3,19 @@
 
 LUMIERE is a modern, high-end e-commerce platform designed for a premium shopping experience. It features a responsive storefront, a comprehensive admin dashboard, a robust backend API, and a mobile application.
 
+## 🔗 Live Links
+
+-   **Admin Panel**: [https://lumiere-admin.vercel.app/login](https://lumiere-admin.vercel.app/login)
+-   **Storefront**: [Link to Storefront (if available)](https://lumiere-store.vercel.app) *(Replace with actual link)*
+
+## 📸 Screenshots
+
+### Home Page
+![Home Page](screenshots/home_page.png)
+
+### Admin Panel
+![Admin Panel](screenshots/admin_panel.png)
+
 ## 🚀 Tech Stack
 
 ### Frontend (Storefront)
@@ -36,29 +49,38 @@ LUMIERE is a modern, high-end e-commerce platform designed for a premium shoppin
 
 ```
 LUMIERE/
-├── src/                # Frontend Request (Storefront) Source Code
-│   ├── components/     # Reusable UI components (Header, Hero, ProductCard, etc.)
-│   ├── pages/          # Application pages (Home, Shop, ProductDetail, Profile, etc.)
-│   ├── context/        # Global state (Auth, Cart, Wishlist)
-│   ├── services/       # API integration services
-│   └── lib/            # Utilities and helper functions
-├── server/             # Backend API Source Code
-│   ├── controllers/    # Route logic
-│   ├── models/         # Database schemas
-│   ├── routes/         # API endpoints
-│   └── middleware/     # Auth and error handling middleware
-├── admin/              # Admin Dashboard Source Code
-├── mobile/             # Mobile Application Source Code
-└── public/             # Static assets (images, icons)
+├── src/                    # Frontend (Storefront) Source Code
+│   ├── components/         # Reusable UI components
+│   ├── pages/              # Application pages (Home, Shop, ProductDetail, etc.)
+│   ├── context/            # Global state management
+│   ├── hooks/              # Custom React hooks
+│   ├── services/           # API integration services
+│   ├── lib/                # Utilities and helper functions
+│   ├── data/               # Static data
+│   └── assets/             # Images and static assets
+├── server/                 # Backend API Source Code
+│   ├── config/             # Configuration files (DB, env)
+│   ├── controllers/        # Route logic
+│   ├── models/             # Database schemas
+│   ├── routes/             # API endpoints
+│   ├── middleware/         # Auth and error handling middleware
+│   └── utils/              # Backend utilities
+├── admin/                  # Admin Dashboard Source Code
+│   ├── src/
+│   │   ├── pages/          # Admin pages (Dashboard, Products, Orders)
+│   │   ├── components/     # Admin-specific components
+│   │   └── services/       # Admin API services
+├── mobile/                 # Mobile Application Source Code
+└── public/                 # Static assets (images, icons)
 ```
 
 ## ✨ Key Features
 
 -   **User Authentication**: Secure sign-up/sign-in using Clerk.
--   **Product Discovery**: diverse categories, search functionality, and detailed product pages.
+-   **Product Discovery**: Diverse categories, search functionality, and detailed product pages.
 -   **Shopping Experience**: Full-featured cart, wishlist, and checkout process.
 -   **Order Management**: User profile with order history and detailed order usage.
--   **Admin Dashboard**: comprehensive tools for managing products, orders, and viewing sales analytics.
+-   **Admin Dashboard**: Comprehensive tools for managing products, orders, and viewing sales analytics.
 -   **Mobile Experience**: Dedicated mobile app for on-the-go shopping.
 -   **Responsive Design**: Fully responsive UI ensuring a seamless experience across all devices.
 
@@ -66,7 +88,7 @@ LUMIERE/
 
 ### Prerequisites
 -   Node.js (v16+)
--   npm or yarn
+-   npm or yarn (or bun)
 -   MongoDB instance
 
 ### Installation
