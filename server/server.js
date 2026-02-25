@@ -12,10 +12,20 @@ import orderRoutes from './routes/orderRoutes.js';
 import subscriberRoutes from './routes/subscriberRoutes.js';
 
 // Load env vars
-dotenv.config();
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-// Connect to database (Removed global call for Vercel)
-// connectDB();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+dotenv.config({ path: path.join(__dirname, '..', '.env') });
+
+// Connect to Redis
+import { connectRedis } from './config/redis.js';
+connectRedis();
+
+// Connect to database
+connectDB();
 
 const app = express();
 
@@ -35,16 +45,6 @@ app.get('/', (req, res) => {
     res.send('API is running...');
 });
 
-// Connect DB Middleware (Moved here so Root health check works even if DB fails)
-app.use(async (req, res, next) => {
-    if (req.path === '/') return next(); // Double safety
-    try {
-        await connectDB();
-    } catch (error) {
-        console.error('DB Connection Error:', error);
-    }
-    next();
-});
 
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);

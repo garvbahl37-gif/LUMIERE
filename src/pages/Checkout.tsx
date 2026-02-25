@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
@@ -32,7 +32,7 @@ interface ShippingAddress {
 const Checkout = () => {
     const navigate = useNavigate();
     const { items, totalPrice, clearCart } = useCart();
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, isLoading: authLoading } = useAuth();
     const { getToken } = useClerkAuth();
     const [step, setStep] = useState<'shipping' | 'payment'>('shipping');
     const [isLoading, setIsLoading] = useState(false);
@@ -47,6 +47,19 @@ const Checkout = () => {
         country: '',
         phone: '',
     });
+
+    // Redirect if unauthenticated
+    useEffect(() => {
+        if (!authLoading && !isAuthenticated) {
+            toast.error("Please sign in to access checkout");
+            navigate('/sign-in');
+        }
+    }, [isAuthenticated, authLoading, navigate]);
+
+    // Prevent rendering if auth is still loading or not authenticated
+    if (authLoading || !isAuthenticated) {
+        return <div className="min-h-screen bg-background flex items-center justify-center">Loading...</div>;
+    }
 
     // Redirect if cart is empty
     if (items.length === 0) {

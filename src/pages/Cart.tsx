@@ -3,11 +3,23 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
 import { Minus, Plus, Trash2, ShoppingBag, ArrowRight } from "lucide-react";
+import { toast } from "sonner";
 
 const Cart = () => {
     const navigate = useNavigate();
     const { items, totalItems, totalPrice, updateQuantity, removeFromCart, clearCart, isLoading } = useCart();
+    const { isAuthenticated } = useAuth();
+
+    const handleCheckout = () => {
+        if (!isAuthenticated) {
+            toast.error("Please sign in to place an order");
+            navigate('/sign-in');
+            return;
+        }
+        navigate('/checkout');
+    };
 
     if (items.length === 0) {
         return (
@@ -159,7 +171,7 @@ const Cart = () => {
                                 <Button
                                     size="lg"
                                     className="w-full"
-                                    onClick={() => navigate('/checkout')}
+                                    onClick={handleCheckout}
                                 >
                                     Proceed to Checkout
                                     <ArrowRight size={18} className="ml-2" />

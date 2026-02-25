@@ -1,5 +1,6 @@
 import Product from '../models/Product.js';
 import Category from '../models/Category.js';
+import redisClient from '../config/redis.js';
 
 // @desc    Get all products
 // @route   GET /api/products
@@ -228,6 +229,14 @@ export const createProduct = async (req, res) => {
         // Update category product count
         await Category.findByIdAndUpdate(product.category, { $inc: { productCount: 1 } });
 
+        // Clear product caches
+        if (redisClient.isOpen) {
+            const keys = await redisClient.keys('cache:/api/products*');
+            if (keys.length > 0) {
+                await redisClient.del(keys);
+            }
+        }
+
         res.status(201).json({
             success: true,
             data: product
@@ -256,6 +265,14 @@ export const updateProduct = async (req, res) => {
                 success: false,
                 message: 'Product not found'
             });
+        }
+
+        // Clear product caches
+        if (redisClient.isOpen) {
+            const keys = await redisClient.keys('cache:/api/products*');
+            if (keys.length > 0) {
+                await redisClient.del(keys);
+            }
         }
 
         res.json({
@@ -288,6 +305,14 @@ export const deleteProduct = async (req, res) => {
         await Category.findByIdAndUpdate(product.category, { $inc: { productCount: -1 } });
 
         await product.deleteOne();
+
+        // Clear product caches
+        if (redisClient.isOpen) {
+            const keys = await redisClient.keys('cache:/api/products*');
+            if (keys.length > 0) {
+                await redisClient.del(keys);
+            }
+        }
 
         res.json({
             success: true,
